@@ -2,6 +2,7 @@
 
 package lesson1.task1
 
+
 import kotlin.math.*
 
 /**
@@ -91,11 +92,8 @@ fun angleInRadian(deg: Int, min: Int, sec: Int): Double {
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {
-    val delta1 = sqr(x2 -x1) + sqr(y2 -y1)
-    val delta = sqrt(delta1)
-    return delta
-}
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double =
+    sqrt(sqr(x2 - x1) + sqr(y2 - y1))
 
 /**
  * Простая
@@ -125,11 +123,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double {
-    val percents = 1 + percent * 0.01
-    val sum = initial * (percents * percents * percents)
-    return sum
-}
+fun accountInThreeYears(initial: Int, percent: Int): Double =
+    initial * ((1 + percent * 0.01) * (1 + percent * 0.01) * (1 + percent * 0.01))
 
 /**
  * Простая
