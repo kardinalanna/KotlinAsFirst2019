@@ -3,6 +3,10 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
+import lesson4.task1.abs
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Пример
@@ -18,7 +22,13 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean = TODO()
+fun isNumberHappy(number: Int): Boolean {
+    val num1 = number / 1000
+    val num2 = number / 100 % 10
+    val num3 = number % 100 / 10
+    val num4 = number % 10
+    return ((num1 + num2) == (num3 + num4))
+}
 
 /**
  * Простая
@@ -27,8 +37,11 @@ fun isNumberHappy(number: Int): Boolean = TODO()
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
-
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+    val moduleX = x1 - x2
+    val moduleY = y1 - y2
+    return (x1 == x2) || (y1 == y2) || (abs(moduleX) == abs(moduleY))
+}
 
 /**
  * Простая
@@ -36,19 +49,28 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int = TODO()
+fun daysInMonth(month: Int, year: Int): Any {
+    if (month == 2) {
+        return if (((year % 400 != 0) && (year % 100 == 0)) || (year % 400 != 0) && (year % 4 != 0)) 28
+        else 29
+    }
+    return if ((month <= 7) && (month % 2 == 0)) 30
+    else
+        if ((month <= 7) && (month % 2 != 0)) 31 else
+            if (month % 2 == 0) 31 else 30
+}
 
 /**
  * Средняя
  *
- * Проверить, лежит ли окружность с центром в (x1, y1) и радиусом r1 целиком внутри
+ * Проверить, лежит ли окружность с центром в (x1, y1) и рreturnадиусом r1 целиком внутри
  * окружности с центром в (x2, y2) и радиусом r2.
  * Вернуть true, если утверждение верно
  */
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
-): Boolean = TODO()
+): Boolean = (sqr(x2 - x1) + sqr(y2 - y1) <= sqr(r2 - r1)) && (r1 <= r2)
 
 /**
  * Средняя
@@ -59,4 +81,6 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
+    (a * b <= r * s) || (a * c <= r * s) || (b * c <= r * s)
+
