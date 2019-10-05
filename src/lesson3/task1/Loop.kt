@@ -71,10 +71,11 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
+    var n = n
     var sum = 0
     if (n < 10) return 1
     while (n > 0) {
-        n / 10
+        n /= 10
         sum++
     }
     return sum
@@ -162,7 +163,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var sqrtM = sqrt(m.toDouble()).toInt()
-    var sqrtN = sqrt(n.toDouble()).toInt()
+    val sqrtN = sqrt(n.toDouble()).toInt()
     for (i in m..n) {
         if ((sqr(sqrtM) == i) || ((sqr(sqrtN) == i))) return true
     }
@@ -192,7 +193,7 @@ fun collatzSteps(x: Int): Int {
     var x = x
     if (x == 1) return 0
     while (x != 1) {
-        if (x % 2 == 0) x = x / 2
+        if (x % 2 == 0) x /= 2
         else x = 3 * x + 1
         steps++
     }
