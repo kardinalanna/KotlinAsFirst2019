@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -73,8 +74,8 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var n = n
     var sum = 0
-    if (n < 10) return 1
-    while (n > 0) {
+    if (abs(n) < 10) return 1
+    while (abs(n) > 0) {
         n /= 10
         sum++
     }
