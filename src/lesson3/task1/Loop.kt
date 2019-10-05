@@ -2,6 +2,7 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -97,14 +98,14 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
+    var n1 = n
+    var m1 = m
+
     if (n == m) return n
-    if ((isPrime(n)) || (isPrime(m))) return n * m
-    if (max(n, m) % min(n, m) == 0) return max(n, m)
-    var max = 0
-    for (i in 1..max(n, m) / 2) {
-        if ((max(n, m) % i == 0) && (i > max)) max = i
+    while (n1 != m1) {
+        if (n1 > m1) n1 -= m1 else m1 -= n1
     }
-    return max * min(n, m)
+    return min(n, m) * max(n, m) / n1
 }
 
 
@@ -146,10 +147,8 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..m) {
-        for (j in 2..n) {
-            if ((m % i == 0) && (n % j == 0) && (i == j)) return false
-        }
+    for (i in 2..min(m, n)) {
+        if ((n % i == 0) && (m % i == 0)) return false
     }
     return true
 }
@@ -162,13 +161,18 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    if ((m == n) && (sqrt(n) * (sqrt(n) == n))) return true
+    var sqrtM = sqrt(m.toDouble()).toInt()
+    var sqrtN = sqrt(n.toDouble()).toInt()
     for (i in m..n) {
-        if (sqrt(i) == Int) return true
+        if ((sqr(sqrtM) == i) || ((sqr(sqrtN) == i))) return true
     }
+    return false
 }
+
 /**
- * Средняя
+ * Средняя if ((m == n) && (sqrt(n) * (sqrt(n) == n))) return true
+for (i in m..n) {
+if (sqrt(i) == Int) return true
  *
  * Гипотеза Коллатца. Рекуррентная последовательность чисел задана следующим образом:
  *
@@ -183,7 +187,17 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var steps = 0
+    var x = x
+    if (x == 1) return 0
+    while (x != 1) {
+        if (x % 2 == 0) x = x / 2
+        else x = 3 * x + 1
+        steps++
+    }
+    return steps
+}
 
 /**
  * Средняя
