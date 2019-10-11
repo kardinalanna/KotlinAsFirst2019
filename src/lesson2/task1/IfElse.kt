@@ -90,12 +90,14 @@ fun timeForHalfWay(
     val way2 = t2 * v2
     val way3 = t3 * v3
     val halfway = (way1 + way2 + way3) / 2
-    if (halfway <= way1) return halfway / v1
+    return if (halfway <= way1) halfway / v1
     else {
-        if (halfway < (way1 + way2)) return t1 + (t2 - ((way1 + way2 - halfway) / v2))
-        if (halfway >= way1 + way2) return t1 + t2 + ((halfway - way1 - way2) / v3)
+        when {
+            halfway < (way1 + way2) -> t1 + (t2 - ((way1 + way2 - halfway) / v2))
+            halfway >= way1 + way2 -> t1 + t2 + ((halfway - way1 - way2) / v3)
+            else -> halfway / v1
+        }
     }
-    return halfway / v1
 }
 
 /**
@@ -111,15 +113,16 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int {
-    return if ((kingX == rookX1) || (kingY == rookY1)) {
-        if ((kingX == rookX2) || (kingY == rookY2)) 3
-        else 1
-    } else if ((kingY == rookY2) || (kingX == rookX2)) {
-        if ((kingX == rookX1) || (kingY == rookY1)) 3
-        else 2
-    } else 0
-}
+): Int =
+    when {
+        ((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
+        ((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) || (kingY != rookY2)) -> 1
+        else -> when {
+            ((kingX == rookX2) || (kingY == rookY2)) -> 2
+            else -> 0
+        }
+
+    }
 
 /**
  * Простая
@@ -135,15 +138,16 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    val moduleY = abs(kingY - bishopY)
-    val moduleX = abs(bishopX - kingX)
-    return if ((rookX == kingX) || (rookY == kingY)) {
-        if ((moduleY == moduleX)) 3 else 1
-    } else if ((moduleY == moduleX)) {
-        if ((rookX == kingX) || (rookY == kingY)) 3 else 2
-    } else 0
-}
+) =
+
+    when {
+        ((rookX == kingX) || (rookY == kingY)) && ((abs(kingY - bishopY) == abs(bishopX - kingX))) -> 3
+        ((rookX == kingX) || (rookY == kingY)) && ((abs(kingY - bishopY) != abs(bishopX - kingX))) -> 1
+        else -> when {
+            ((abs(kingY - bishopY) == abs(bishopX - kingX))) -> 2
+            else -> 0
+        }
+    }
 
 /**
  *
@@ -152,22 +156,14 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-
-fun triangleKind(a: Double, b: Double, c: Double) {
-    var max = a
-    var sr = b
-    var min = c
-    if (b > a) max = b else if (c > max) max = c
-    if (a < c) min = a else if (b < min) min = b
-    sr = a + b + c - min - max
+fun triangleKind(a: Double, b: Double, c: Double) =
     when {
-        max + min > sr -> -1
-        sqr(max) == sqr(min) + sqr(sr) -> 1
-        sqr(max) > sqr(min) + sqr(sr) -> 2
+        minOf(a, b, c) + (a + b + c - minOf(a, b, c) - maxOf(a, c, b)) < maxOf(a, c, b) -> -1
+        sqr(maxOf(a, c, b)) == sqr(minOf(a, b, c)) + sqr(a + b + c - minOf(a, b, c) - maxOf(a, c, b)) -> 1
+        sqr(maxOf(a, c, b)) > sqr(minOf(a, b, c)) + sqr(a + b + c - minOf(a, b, c) - maxOf(a, c, b)) -> 2
         else -> 0
 
     }
-}
 
 /**
  * Средняя
@@ -179,12 +175,14 @@ fun triangleKind(a: Double, b: Double, c: Double) {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     when {
-        (b < c) || (d < a) -> -1
-        (c > a) && (d > b) && (c <= b) -> abs(b - c)
-        (a > c) && (b > d) && (a <= b) -> abs(d - a)
-        (a <= c) && (b >= d) -> abs(d - c)
-        (a >= b) || (b <= d) -> abs(b - a)
-        else -> -1
+        ((a > d) || (b < c)) -> -1
+        else -> when {
+            (c > a) && (d > b) && (c <= b) -> b - c
+            (a > c) && (b > d) && (a <= b) -> d - a
+            (a <= c) && (b >= d) && (a <= b) -> d - c
+            (a >= d) || (b <= d) && (c <= b) -> b - a
+            else -> -1
+        }
     }
 
 
