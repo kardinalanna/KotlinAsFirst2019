@@ -180,6 +180,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
             (c > a) && (d > b) && (c <= b) -> b - c
             (a > c) && (b > d) && (a <= b) -> d - a
             (a <= c) && (b >= d) && (a <= b) -> d - c
+            
             (a >= d) || (b <= d) && (c <= b) -> b - a
             else -> -1
         }
