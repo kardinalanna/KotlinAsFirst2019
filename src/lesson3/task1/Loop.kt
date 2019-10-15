@@ -89,8 +89,19 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    if ((n == 1) || (n == 2)) return 1
-    return fib(n - 1) + fib(n - 2)
+    var fib = 2
+    var count1 = 1
+    var count2 = 1
+    var count3 = 0
+    if (n == 1) return 1
+    if (n == 2) return 1
+    while (fib != n) {
+        count3 = count1 + count2
+        count1 = count2
+        count2 = count3
+        fib++
+    }
+    return count3
 }
 
 /**
@@ -100,15 +111,22 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var n1 = n
-    var m1 = m
-
-    if (n == m) return n
+    fun nod(n: Int, m: Int): Int {
+        var n1 = n
+        var m1 = m
+        while ((n1 != 0) || (m1 != 0)) {
+            if (n1 > m1) n1 /= m1
+            else m1 /= n1
+        }
+        return n1 + m1
+    }
+    return nod(n, m) / n
+}
+/* if (n == m) return n
     while (n1 != m1) {
         if (n1 > m1) n1 -= m1 else m1 -= n1
     }
-    return min(n, m) * max(n, m) / n1
-}
+    return min(n, m) * max(n, m) / n1*/
 
 
 /**
@@ -117,15 +135,11 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var min = 0
-    if (n == 2) return 2
-    for (i in 2..n) {
-        if (n % i == 0) {
-            min = i
-            break
-        }
+    var i = 2
+    while (n % i != 0) {
+        i++
     }
-    return min
+    return i
 }
 
 /**
@@ -133,13 +147,9 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var max = 0
-    for (i in 1..n) {
-        if ((n % i == 0) && (i < n)) max = i
-    }
-    return max
-}
+fun maxDivisor(n: Int): Int =
+    n / minDivisor(n)
+
 
 /**
  * Простая
@@ -191,11 +201,10 @@ if (sqrt(i) == Int) return true
  */
 fun collatzSteps(x: Int): Int {
     var steps = 0
-    var x = x
-    if (x == 1) return 0
-    while (x != 1) {
-        if (x % 2 == 0) x /= 2
-        else x = 3 * x + 1
+    var variable = x
+    while (variable != 1) {
+        if (variable % 2 == 0) variable /= 2
+        else variable = 3 * variable + 1
         steps++
     }
     return steps

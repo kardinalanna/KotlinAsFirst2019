@@ -231,7 +231,7 @@ fun isPerfect(n: Int): Boolean {
 
 Другой вариант записи той же самой функции использует оператор продолжения **continue**:
 
-[source,kotlin]
+2[source,kotlin]
 ----
 fun isPerfect(n: Int): Boolean {
     var sum = 1
