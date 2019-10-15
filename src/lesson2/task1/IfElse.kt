@@ -106,6 +106,7 @@ fun timeForHalfWay(
  * и 3, если угроза от обеих ладей.
  * Считать, что ладьи не могут загораживать друг друга
  */
+
 fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
@@ -117,7 +118,6 @@ fun whichRookThreatens(
         (kingX == rookX2) || (kingY == rookY2) -> 2
         else -> 0
     }
-
 
 /**
  * Простая
@@ -169,6 +169,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
+
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     if ((a > d) || (b < c)) return -1
     return when {
@@ -180,12 +181,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     }
 }
 
-/*
-(c > a) && (d > b) && (c <= b) -> b - c
-(a > c) && (b > d) && (a <= b) -> d - a
-(a <= c) && (b >= d) && (a <= b) -> d - c
-(a >= d) || (b <= d) && (c <= b) -> b - a
-*/
+
 
 
 
