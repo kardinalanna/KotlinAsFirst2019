@@ -307,11 +307,10 @@ fun squareSequenceDigit(n: Int): Int {
             i++
             limit *= 10
         }
-        print("$count $nun   ")
         nun += i
     }
     var result = count * count
-    for (t in nun until n) {
+    for (t in n until nun) {
         result /= 10
     }
     return result % 10
