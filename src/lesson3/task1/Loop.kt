@@ -206,7 +206,7 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var sum: Double = 0.0
+    var sum = 0.0
     val absX = x % (2 * PI)
     var nun: Double = absX
     var n = 2
@@ -310,14 +310,12 @@ fun squareSequenceDigit(n: Int): Int {
         nun += i
     }
     var result = count * count
-    for (t in n until nun) {
-        result /= 10
-    }
+    for (t in n until nun) result /= 10
     return result % 10
 }
 
 fun main() {
-    print("${squareSequenceDigit(7)} ")
+
 }
 
 /**
@@ -329,4 +327,24 @@ fun main() {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var limit = 10
+    var back = 1
+    var count0 = 2
+    var next = 0
+    var nun = 3
+    var i = 1
+    if ((n == 1) || (n == 2)) return 1
+    while (nun < n) {
+        next = back + count0
+        back = count0
+        count0 = next
+        if (next >= limit) {
+            i++
+            limit *= 10
+        }
+        nun += i
+    }
+    for (t in n until nun) next /= 10
+return next % 10
+}
