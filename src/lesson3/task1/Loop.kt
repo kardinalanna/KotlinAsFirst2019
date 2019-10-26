@@ -110,13 +110,12 @@ fun fib(n: Int): Int {
 fun nod(n: Int, m: Int): Int {
     var n1 = n
     var m1 = m
-    while ((n1 != 0) || (m1 != 0)) {
-        if (n1 > m1) n1 /= m1
-        else m1 /= n1
+    while (n1 != m1) {
+        if (n1 > m1) n1 -= m1
+        else m1-= n1
     }
-    return n1 + m1
+    return n1
 }
-
 fun lcm(m: Int, n: Int): Int = n * m / nod(n, m)
 
 /**
