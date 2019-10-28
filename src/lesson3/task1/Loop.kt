@@ -110,13 +110,14 @@ fun fib(n: Int): Int {
 fun nod(n: Int, m: Int): Int {
     var n1 = n
     var m1 = m
-    while (n1 != m1) {
-        if (n1 > m1) n1 -= m1
-        else m1-= n1
+    while ((n1 != 0) || (m1 != 0)) {
+        if (n1 > m1) n1 %= m1
+        else m1 %= n1
     }
-    return n1
+    return n1 + m1
 }
-fun lcm(m: Int, n: Int): Int = n * m / nod(n, m)
+
+fun lcm(m: Int, n: Int): Int = n / nod(n, m) * m
 
 /**
  * Простая
@@ -124,10 +125,9 @@ fun lcm(m: Int, n: Int): Int = n * m / nod(n, m)
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var i = 2
-    while (n % i != 0 && i <= (sqrt(n.toDouble()) + 1.0).toInt()) i++
-
-    return if (i > (sqrt(n.toDouble()) + 1.0).toInt()) n else i
+    for (i in 2..sqrt(n.toDouble()).toInt())
+        if (n % i == 0) return i
+    return n
 }
 
 /**
@@ -145,14 +145,10 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..min(m, n)) {
-        if ((n % i == 0) && (m % i == 0)) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 /**
+*
  * Простая
  *
  * Для заданных чисел m и n, m <= n, определить, имеется ли хотя бы один точный квадрат между m и n,
@@ -227,7 +223,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var sum: Double = 1.0
+    var sum = 1.0
     val absX = x % (2 * PI)
     var nun: Double = -(absX * absX) / 2
     var n = 3
@@ -296,7 +292,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var limit = 10
+    var limit: Long = 10
     var i = 1
     var count = 1
     var nun = 1
@@ -345,5 +341,5 @@ fun fibSequenceDigit(n: Int): Int {
         nun += i
     }
     for (t in n until nun) next /= 10
-return next % 10
+    return next % 10
 }

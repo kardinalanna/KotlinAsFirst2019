@@ -92,12 +92,15 @@ fun timeForHalfWay(
     val way3 = t3 * v3
     val halfway = (way1 + way2 + way3) / 2
     return when {
+        halfway <= way1 -> halfway / v1
         halfway < (way1 + way2) -> t1 + (t2 - ((way1 + way2 - halfway) / v2))
         halfway >= way1 + way2 -> t1 + t2 + ((halfway - way1 - way2) / v3)
         else -> halfway / v1
     }
 }
+fun main() {
 
+}
 /**
  * Простая
  *
@@ -172,12 +175,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    val right = min(b, d)
+    val minright = min(b, d)
     val maxLeft = max(a, c)
-    return when {
-        (maxLeft <= right) -> right - maxLeft
-        else -> -1
-    }
+    return if (maxLeft <= minright) minright - maxLeft else -1
 }
 
 
