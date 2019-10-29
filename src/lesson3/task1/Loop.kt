@@ -119,6 +119,7 @@ fun nod(n: Int, m: Int): Int {
 
 fun lcm(m: Int, n: Int): Int = n / nod(n, m) * m
 
+
 /**
  * Простая
  *
@@ -148,7 +149,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 /**
-*
+ *
  * Простая
  *
  * Для заданных чисел m и n, m <= n, определить, имеется ли хотя бы один точный квадрат между m и n,
@@ -309,9 +310,6 @@ fun squareSequenceDigit(n: Int): Int {
     return result % 10
 }
 
-fun main() {
-
-}
 
 /**
  * Сложная
