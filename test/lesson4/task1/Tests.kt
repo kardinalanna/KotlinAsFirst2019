@@ -187,7 +187,7 @@ class Tests {
         assertEquals(listOf(2, 14, 12), convert(1000, 19))
     }
 
-  /*  @Test
+  @Test
     @Tag("Hard")
     fun convertToString() {
         assertEquals("1", convertToString(1, 2))
@@ -197,7 +197,6 @@ class Tests {
         assertEquals("z", convertToString(35, 36))
         assertEquals("a02220281", convertToString(Int.MAX_VALUE, 11))
     }
-    */
 
 
     @Test

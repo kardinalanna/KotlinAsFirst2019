@@ -119,7 +119,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = sqrt(v.sumByDouble() { it * it })
+fun abs(v: List<Double>): Double = sqrt(v.sumByDouble { it * it })
 
 /**
  * Простая
@@ -171,10 +171,11 @@ fun times(a: List<Int>, b: List<Int>): Int {
 
 fun polynom(p: List<Int>, x: Int): Int {
     if (p.isEmpty()) return 0
-    for (i in 0 until p.size) {
-        p[i] * x.toDouble().pow(i.toDouble()).toInt()
+    var nun = 0
+    for (i in p.indices) {
+        nun += p[i] * x.toDouble().pow(i.toDouble()).toInt()
     }
-    return p.sum()
+    return nun
 }
 
 /**
@@ -188,13 +189,11 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    for (i in 0 until list.size) {
-        val count = list.size - i
-        list[list.size - i - 1] = list.subList(0, count).sum()
+    for (i in 1 until list.size) {
+        list[i] += list[i - 1]
     }
     return list
 }
-
 
 /**
  * Средняя
@@ -207,10 +206,14 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var nun = n
     val result = mutableListOf<Int>()
-    while (nun != 1) {
-        result.add(minDivisor(nun))
-        nun /= minDivisor(nun)
+    for (i in 2 until n / 2) {
+        while (nun % i == 0) {
+            result.add(i)
+            nun /= i
+
+        }
     }
+    if (result.isEmpty()) result.add(n)
     return result
 }
 
@@ -235,7 +238,6 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     var count = n
     val result = mutableListOf<Int>()
-    val base = base
     while (count >= base) {
         result.add(count % base)
         count /= base
@@ -257,7 +259,13 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-   fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
+    val nun = convert(n, base)
+    var result = ""
+    for (element in nun) result += letter[element]
+    return result
+}
 
 /**
  * Средняя
@@ -267,27 +275,18 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun pow(base: Int, i: Int): Int {
-    var nun = base
+    var x = base
     if (i == 0) return 1
-    for (t in 1..i) if (i == t) return nun else nun *= nun
-    return nun
-
-}
-
-fun main() {
-    (pow(2, 2))
-    print(main())
-
+    for (t in 1 until i) x *= base
+    return x
 }
 
 fun decimal(digits: List<Int>, base: Int): Int {
-    var digits1 = digits.sorted()
     var count = 0
-    if ((digits1.size == 1) && (digits1[0] < 10)) return digits1[0]
+    if ((digits.size == 1) && (digits[0] < 10)) return digits[0]
     for (i in digits.indices) {
-        val u = abs(i - digits.size)
-        count += digits1[u] * pow(base, u)
-        print("$count - ${digits1[u]} - ${pow(base, u)} &&   ")
+        val u = abs(digits.size - i - 1)
+        count += digits[i] * pow(base, u)
     }
     return count
 }

@@ -321,7 +321,7 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var limit = 10
+    var limit: Long = 10
     var back = 1
     var count0 = 2
     var next = 0
