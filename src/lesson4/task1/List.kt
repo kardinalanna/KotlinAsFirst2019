@@ -210,9 +210,9 @@ fun factorize(n: Int): List<Int> {
         while (nun % i == 0) {
             result.add(i)
             nun /= i
-
         }
     }
+    if (nun != 1) result.add(nun)
     if (result.isEmpty()) result.add(n)
     return result
 }
@@ -303,7 +303,20 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var result = 0
+    var nun = 0
+    val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
+    for (i in str.indices) {
+        if (str[i] <= '9') {
+            result += (str[i] - '0') * pow(base, str.length - i - 1)
+        } else {
+            nun = letter.indexOf(str[i], 9)
+            result += nun * pow(base, str.length - i - 1)
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
