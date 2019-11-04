@@ -94,8 +94,7 @@ fun timeForHalfWay(
     return when {
         halfway <= way1 -> halfway / v1
         halfway < (way1 + way2) -> t1 + (t2 - ((way1 + way2 - halfway) / v2))
-        halfway >= way1 + way2 -> t1 + t2 + ((halfway - way1 - way2) / v3)
-        else -> 0.0
+        else -> t1 + t2 + ((halfway - way1 - way2) / v3)
     }
 }
 

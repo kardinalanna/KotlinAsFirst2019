@@ -206,7 +206,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var nun = n
     val result = mutableListOf<Int>()
-    for (i in 2 until n / 2) {
+    for (i in 2 until sqr(n)) {
         while (nun % i == 0) {
             result.add(i)
             nun /= i
@@ -243,9 +243,7 @@ fun convert(n: Int, base: Int): List<Int> {
         count /= base
     }
     result.add(count)
-    val result2 = mutableListOf<Int>()
-    for (i in 0 until result.size) result2.add(result[result.size - i - 1])
-    return result2
+    return result.reversed()
 }
 
 /**
@@ -285,7 +283,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
     var count = 0
     if ((digits.size == 1) && (digits[0] < 10)) return digits[0]
     for (i in digits.indices) {
-        val u = abs(digits.size - i - 1)
+        val u = digits.size - i - 1
         count += digits[i] * pow(base, u)
     }
     return count
@@ -305,15 +303,10 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0
-    var nun = 0
-    val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
     for (i in str.indices) {
-        if (str[i] <= '9') {
-            result += (str[i] - '0') * pow(base, str.length - i - 1)
-        } else {
-            nun = letter.indexOf(str[i], 9)
-            result += nun * pow(base, str.length - i - 1)
-        }
+        result += if (str[i] <= '9')
+            (str[i] - '0') * pow(base, str.length - i - 1)
+        else (str[i] - 'W') * pow(base, str.length - i - 1)
     }
     return result
 }
@@ -326,7 +319,20 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+
+fun roman(n: Int): String {
+    val list0: List<String> = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    val list2 = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    var nun = n
+    var result: String = ""
+    for (i in list2.indices) {
+        while (nun >= list2[i]) {
+            result += list0[i]
+            nun -= list2[i]
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная
@@ -335,4 +341,4 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+//fun russian(n: Int): String = TODO() */
