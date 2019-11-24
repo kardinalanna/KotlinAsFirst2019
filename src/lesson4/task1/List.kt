@@ -2,10 +2,7 @@
 
 package lesson4.task1
 
-import lesson3.task1.minDivisor
 import lesson1.task1.discriminant
-import lesson1.task1.sqr
-import java.io.File.separator
 import kotlin.math.*
 
 
@@ -202,15 +199,17 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-
 fun factorize(n: Int): List<Int> {
     var nun = n
+    var i = 2
     val result = mutableListOf<Int>()
-    for (i in 2 until sqr(n)) {
+    while (nun != i) {
         while (nun % i == 0) {
             result.add(i)
             nun /= i
         }
+        i++
+        print("$i, $nun --")
     }
     if (nun != 1) result.add(nun)
     if (result.isEmpty()) result.add(n)
@@ -266,7 +265,7 @@ fun convertToString(n: Int, base: Int): String {
 }
 
 /**
- * Средняя
+ * Средняя val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
  *
  * Перевести число, представленное списком цифр digits от старшей к младшей,
  * из системы счисления с основанием base в десятичную.
@@ -302,13 +301,18 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var result = 0
+    val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
+    val finish = mutableListOf<Int>()
     for (i in str.indices) {
-        result += if (str[i] <= '9')
-            (str[i] - '0') * pow(base, str.length - i - 1)
-        else (str[i] - 'W') * pow(base, str.length - i - 1)
+        finish.add(letter.indexOf(str[i]))
+        println("${finish[i]}")
     }
-    return result
+    println("$finish")
+    return (decimal(finish.toList(), base))
+}
+
+fun main() {
+
 }
 
 /**
@@ -322,16 +326,30 @@ fun decimalFromString(str: String, base: Int): Int {
 
 fun roman(n: Int): String {
     val list0: List<String> = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val list2 = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val list2 = listOf<Pair<Int, String>>(
+        1000 to "M",
+        900 to "CM",
+        500 to "D",
+        400 to "CD",
+        100 to "C",
+        90 to "XC",
+        50 to "L",
+        40 to "XL",
+        10 to "X",
+        9 to "IX",
+        5 to "V",
+        4 to "IV",
+        1 to "I"
+    )
     var nun = n
-    var result: String = ""
+    var result = StringBuilder()
     for (i in list2.indices) {
-        while (nun >= list2[i]) {
-            result += list0[i]
-            nun -= list2[i]
+        while (nun >= list2[i].first) {
+            result.append(list2[i].second)
+            nun -= list2[i].first
         }
     }
-    return result
+    return result.toString()
 }
 
 /**
@@ -341,4 +359,4 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-//fun russian(n: Int): String = TODO() */
+fun russian(n: Int): String = TODO()
