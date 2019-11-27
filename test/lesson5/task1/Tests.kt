@@ -82,6 +82,7 @@ class Tests {
         )
     }
 
+
     @Test
     @Tag("Example")
     fun buildWordSet() {
@@ -109,7 +110,6 @@ class Tests {
         assertEquals(
             mapOf(5 to listOf("Михаил", "Семён"), 3 to listOf("Марат")),
             buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
-                .mapValues { (_, v) -> v.sorted() }
         )
         assertEquals(
             mapOf(3 to listOf("Марат", "Михаил", "Семён")),
@@ -265,7 +265,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun propagateHandshakes() {
-        assertEquals(
+       assertEquals(
             mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
                 "Sveta" to setOf("Mikhail"),

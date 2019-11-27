@@ -5,6 +5,17 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import kotlin.math.*
 
+import javafx.scene.control.Separator
+import kotlinx.html.I
+import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import lesson3.task1.digitNumber
+import lesson3.task1.isPrime
+import lesson3.task1.minDivisor
+import kotlin.math.pow
+import kotlin.math.sqrt
+import kotlin.text.StringBuilder
+
 
 /**
  * Пример
@@ -209,7 +220,6 @@ fun factorize(n: Int): List<Int> {
             nun /= i
         }
         i++
-        print("$i, $nun --")
     }
     if (nun != 1) result.add(nun)
     if (result.isEmpty()) result.add(n)
@@ -256,16 +266,16 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
+fun convertToString(n: Int, base: Int): StringBuilder {
     val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
     val nun = convert(n, base)
-    var result = ""
-    for (element in nun) result += letter[element]
+    var result = StringBuilder()
+    for (element in nun) result.append(letter[element])
     return result
 }
 
 /**
- * Средняя val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
+ * Средняя
  *
  * Перевести число, представленное списком цифр digits от старшей к младшей,
  * из системы счисления с основанием base в десятичную.
@@ -301,19 +311,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
-    val finish = mutableListOf<Int>()
+    var result = 0
     for (i in str.indices) {
-        finish.add(letter.indexOf(str[i]))
-        println("${finish[i]}")
+        result += if (str[i] <= '9')
+            (str[i] - '0') * pow(base, str.length - i - 1)
+        else (str[i] - 'W') * pow(base, str.length - i - 1)
     }
-    println("$finish")
-    return (decimal(finish.toList(), base))
+    return result
 }
 
-fun main() {
-
-}
 
 /**
  * Сложная
@@ -325,8 +331,7 @@ fun main() {
  */
 
 fun roman(n: Int): String {
-    val list0: List<String> = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val list2 = listOf<Pair<Int, String>>(
+    val list2 = listOf(
         1000 to "M",
         900 to "CM",
         500 to "D",
@@ -342,11 +347,11 @@ fun roman(n: Int): String {
         1 to "I"
     )
     var nun = n
-    var result = StringBuilder()
-    for (i in list2.indices) {
-        while (nun >= list2[i].first) {
-            result.append(list2[i].second)
-            nun -= list2[i].first
+    val result = StringBuilder()
+    for (i in list2) {
+        while (nun >= i.first) {
+            result.append(i.second)
+            nun -= i.first
         }
     }
     return result.toString()
@@ -359,4 +364,4 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-  fun russian(n: Int): String = TODO()
+fun russian(n: Int): String = TODO()

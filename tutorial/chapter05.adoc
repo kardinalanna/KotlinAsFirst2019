@@ -311,6 +311,7 @@ fun removeFillerWords(
 ----
 
 Попробуем написать тесты для нашей функции `removeFillerWords`.
+    )
 
 [source,kotlin]
 ----
@@ -323,7 +324,6 @@ fun removeFillerWords() {
             "Я как-то люблю Котлин".split(" "),
             "как-то"
         )
-    )
     assertEquals(
         "Я люблю Котлин".split(" "),
         removeFillerWords(
