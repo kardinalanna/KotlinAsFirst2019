@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 /**
  * Пример
  *
@@ -70,6 +72,8 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String = TODO()
+
+
 
 /**
  * Средняя

@@ -3,18 +3,8 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.*
-
-import javafx.scene.control.Separator
-import kotlinx.html.I
-import lesson1.task1.discriminant
-import lesson1.task1.sqr
-import lesson3.task1.digitNumber
-import lesson3.task1.isPrime
-import lesson3.task1.minDivisor
 import kotlin.math.pow
 import kotlin.math.sqrt
-import kotlin.text.StringBuilder
 
 
 /**
