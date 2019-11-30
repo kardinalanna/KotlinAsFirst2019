@@ -71,8 +71,31 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
-
+fun dateStrToDigit(str: String): String {
+    val month = mapOf<String, String>(
+        "января" to "01",
+        "февраля" to "02",
+        "марта" to "03",
+        "апреля" to "04",
+        "майя" to "05",
+        "июня" to "06",
+        "июля" to "07",
+        "августа " to "08",
+        "сентября" to "09",
+        "октября" to "10",
+        "ноября" to "11",
+        "декабря" to "12"
+    )
+    val drop = str.split(" ").toMutableList()
+    return if (((drop.size != 3) || (drop[1]) !in month) || (drop[0].toIntOrNull() == null) || (drop[2].toIntOrNull() == null)) "" else {
+        val mon: String? = month[drop[1]]
+        val day = daysInMonth(mon!!.toInt(), drop[2].toInt())
+        if (drop[0].toInt() <= day) {
+            drop[1] = mon.toString()
+            String.format("%02d.%s.%s", drop[0].toInt(), drop[1], drop[2])
+        } else ""
+    }
+}
 
 
 /**
@@ -85,7 +108,33 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val month = mapOf<String, String>(
+        "января" to "01",
+        "февраля" to "02",
+        "марта" to "03",
+        "апреля" to "04",
+        "майя" to "05",
+        "июня" to "06",
+        "июля" to "07",
+        "августа " to "08",
+        "сентября" to "09",
+        "октября" to "10",
+        "ноября" to "11",
+        "декабря" to "12"
+    )
+    val newMonth = month.map { it.value to it.key }.toMap()
+    val list = digital.split(".").toMutableList()
+    return if ((list[1] !in newMonth) || (list.size != 3)) "" else {
+        val monthes = newMonth[list[1]]
+        if ((monthes != null) && (list[0].toIntOrNull() != null) && (list[2].toIntOrNull() != null)) {
+            if (list[0].toInt() <= daysInMonth(list[1].toInt(), list[2].toInt())) {
+                list[1] = monthes
+                String.format("%d %s %s", list[0].toInt(), list[1], list[2])
+            } else ""
+        } else ""
+    }
+}
 
 /**
  * Средняя

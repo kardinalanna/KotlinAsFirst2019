@@ -231,7 +231,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val set = chars.toSet()
+    val set = (chars.map {it.toLowerCase()}).toSet()
     return (word.toLowerCase().all { set.contains(it) })
 }
 
@@ -301,16 +301,23 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = friends.toMutableMap()
+    var finihSize = 0
+
     for ((key, value) in friends) {
-        val setSize = value.size
-        while (value.size != setSize) {
+        var setSize = value.size
+        while (finihSize != setSize) {
+            setSize = finihSize
+
             for (string in value) {
                 if (friends[string] == null) {
-                    result.put(string, setOf<String>())
+                    result.put(string, setOf())
                     continue
                 }
-                result.put(key, value + friends[string]!! - key)
+                result.put(key, value + (friends[string] ?: error("")) - key)
+                println("finih =$finihSize, set =$setSize")
             }
+            finihSize = result[key]!!.size
+
         }
     }
     return result
