@@ -256,12 +256,12 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): StringBuilder {
+fun convertToString(n: Int, base: Int): String {
     val letter = "0123456789abcdefghijklmnopqrstuvwxyz"
     val nun = convert(n, base)
-    var result = StringBuilder()
+    val result = StringBuilder()
     for (element in nun) result.append(letter[element])
-    return result
+    return result.toString()
 }
 
 /**
@@ -338,10 +338,10 @@ fun roman(n: Int): String {
     )
     var nun = n
     val result = StringBuilder()
-    for (i in list2) {
-        while (nun >= i.first) {
-            result.append(i.second)
-            nun -= i.first
+    for ((key, value) in list2) {
+        while (nun >= key) {
+            result.append(value)
+            nun -= key
         }
     }
     return result.toString()

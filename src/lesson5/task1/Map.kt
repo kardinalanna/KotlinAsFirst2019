@@ -184,8 +184,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val n = mutableMapOf<String, Pair<Double, Int>>()
     for ((first, second) in stockPrices) {
         val itFirst = n[first]
-        if (first !in n) n[first] = Pair(second, 1) else {
-            val newF = itFirst!!.first.plus(second)
+        if (itFirst == null) n[first] = Pair(second, 1) else {
+            val newF = itFirst.first.plus(second)
             val newS = itFirst.second.plus(1)
             n[first] = Pair(newF, newS)
         }
@@ -231,7 +231,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val set = (chars.map {it.toLowerCase()}).toSet()
+    val set = (chars.map { it.toLowerCase() }).toSet()
     return (word.toLowerCase().all { set.contains(it) })
 }
 
@@ -250,7 +250,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     for (element in list) {
-        map.put(element, list.count { it == element })
+        if (element !in map.keys) map.put(element, list.count { it == element })
     }
     return map.filter { it.value > 1 }
 }
@@ -266,9 +266,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  */
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.isEmpty()) return false
-    for (key1 in 0 until (words.size - 1)) {
-        for (key2 in (key1 + 1) until (words.size)) {
-            if (words[key1] == words[key2].reversed()) return true
+    val newWords = mutableListOf<Map<String, Int>>()
+    words.mapTo(newWords) { it -> extractRepeats(it.map { it.toString() }) }
+    for (key1 in 0 until (newWords.size - 1)) {
+        for (key2 in (key1 + 1) until (newWords.size)) {
+            if (newWords[key1] == newWords[key2] && (words[key1].toSet() == words[key2].toSet())) return true
         }
     }
     return false
@@ -302,22 +304,19 @@ fun hasAnagrams(words: List<String>): Boolean {
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = friends.toMutableMap()
     var finihSize = 0
-
     for ((key, value) in friends) {
-        var setSize = value.size
+        var setSize = 1
         while (finihSize != setSize) {
-            setSize = finihSize
-
             for (string in value) {
+                println("2 set= $setSize, finish = $finihSize")
                 if (friends[string] == null) {
                     result.put(string, setOf())
+                    finihSize = result[key]!!.size
                     continue
                 }
                 result.put(key, value + (friends[string] ?: error("")) - key)
-                println("finih =$finihSize, set =$setSize")
+                finihSize = result[key]!!.size
             }
-            finihSize = result[key]!!.size
-
         }
     }
     return result
