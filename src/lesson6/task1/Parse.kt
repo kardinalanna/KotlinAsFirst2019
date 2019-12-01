@@ -90,7 +90,7 @@ fun dateStrToDigit(str: String): String {
     return if (((drop.size != 3) || (drop[1]) !in month) || (drop[0].toIntOrNull() == null) || (drop[2].toIntOrNull() == null)) "" else {
         val mon: String? = month[drop[1]]
         val day = daysInMonth(mon!!.toInt(), drop[2].toInt())
-        if (drop[0].toInt() <= day) {
+        if ((drop[0].toInt() <= day) && (drop[0].toInt() > 0)) {
             drop[1] = mon.toString()
             String.format("%02d.%s.%s", drop[0].toInt(), drop[1], drop[2])
         } else ""
@@ -128,7 +128,7 @@ fun dateDigitToStr(digital: String): String {
     return if ((list[1] !in newMonth) || (list.size != 3)) "" else {
         val monthes = newMonth[list[1]]
         if ((monthes != null) && (list[0].toIntOrNull() != null) && (list[2].toIntOrNull() != null)) {
-            if (list[0].toInt() <= daysInMonth(list[1].toInt(), list[2].toInt())) {
+            if ((list[0].toInt() <= daysInMonth(list[1].toInt(), list[2].toInt())) && (list[0].toInt() > 0)) {
                 list[1] = monthes
                 String.format("%d %s %s", list[0].toInt(), list[1], list[2])
             } else ""
