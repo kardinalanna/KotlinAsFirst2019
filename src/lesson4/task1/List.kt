@@ -302,11 +302,10 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0
-    for (i in str.indices) {
-        result += if (str[i] <= '9')
-            (str[i] - '0') * pow(base, str.length - i - 1)
-        else (str[i] - 'W') * pow(base, str.length - i - 1)
-    }
+    for (i in str.indices) result += (pow(
+        base,
+        str.length - i - 1
+    )) * if (str[i] <= '9') (str[i] - '0') else (str[i] - 'W')
     return result
 }
 

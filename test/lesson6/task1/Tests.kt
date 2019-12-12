@@ -35,7 +35,6 @@ class Tests {
     @Tag("Normal")
     fun dateStrToDigit() {
         assertEquals("01.05.1", dateStrToDigit("01 мая 1"))
-
         assertEquals("15.07.2016", dateStrToDigit("15 июля 2016"))
         assertEquals("", dateStrToDigit("3 мартобря 1918"))
         assertEquals("18.11.2018", dateStrToDigit("18 ноября 2018"))
@@ -86,7 +85,7 @@ class Tests {
         assertEquals(226, bestHighJump("226 +"))
         assertEquals(-1, bestHighJump("???"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
-    }
+         }
 
     @Test
     @Tag("Hard")
@@ -106,7 +105,7 @@ class Tests {
     @Tag("Hard")
     fun firstDuplicateIndex() {
         assertEquals(-1, firstDuplicateIndex("Привет"))
-        assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
+        assertEquals(9, firstDuplicateIndex("Он пошёл  KDв школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
     }

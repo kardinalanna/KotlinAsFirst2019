@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+
 /**
  * Пример
  *
@@ -93,7 +94,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val gradeName = mutableMapOf<Int, MutableList<String>>()
-    for ((name: String, grade: Int) in grades.toSortedMap()) {
+    for ((name: String, grade: Int) in grades) {
         gradeName.getOrPut(grade) { mutableListOf() }.add(name)
     }
     return gradeName
@@ -249,7 +250,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
-    for (element in list) {
+    for (element in list.toSet()) {
         if (element !in map.keys) map.put(element, list.count { it == element })
     }
     return map.filter { it.value > 1 }
@@ -301,6 +302,8 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
+
+
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = friends.toMutableMap()
     var finihSize = 0
@@ -308,7 +311,6 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         var setSize = 1
         while (finihSize != setSize) {
             for (string in value) {
-                println("2 set= $setSize, finish = $finihSize")
                 if (friends[string] == null) {
                     result.put(string, setOf())
                     finihSize = result[key]!!.size
@@ -341,14 +343,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (list.isEmpty()) return Pair(-1, -1)
-    val set = list
-    for ((index, element) in list.withIndex()) {
-        val chek = number - element
-        println("num =$number, ele= $element")
-        if ((set - element).contains(chek))
-            return Pair(index, (list - element).indexOf(chek) + 1)
+    val map = mutableMapOf<Int, Int>()
+    for ((key, vall) in list.withIndex()) map[vall] = key
+    for ((elem, vall) in list.withIndex()) {
+        if (((number - vall) in map.keys) && ((vall != (number - vall)) || (list.indexOf(number - vall) != map[number - vall]))) return Pair<Int, Int>(
+            elem,
+            map[number - vall]!!
+        )
     }
-    return Pair(-1, -1)
+    return (Pair(-1, -1))
 }
 
 /**

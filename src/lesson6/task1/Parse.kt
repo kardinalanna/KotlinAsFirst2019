@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import lesson4.task1.roman
 
 /**
  * Пример
@@ -72,27 +73,30 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val month = mapOf<String, String>(
-        "января" to "01",
-        "февраля" to "02",
-        "марта" to "03",
-        "апреля" to "04",
-        "мая" to "05",
-        "июня" to "06",
-        "июля" to "07",
-        "августа " to "08",
-        "сентября" to "09",
-        "октября" to "10",
-        "ноября" to "11",
-        "декабря" to "12"
+    val month = mapOf<String, Int>(
+        "января" to 1,
+        "февраля" to 2,
+        "марта" to 3,
+        "апреля" to 4,
+        "мая" to 5,
+        "июня" to 6,
+        "июля" to 7,
+        "августа " to 8,
+        "сентября" to 9,
+        "октября" to 10,
+        "ноября" to 11,
+        "декабря" to 12
     )
     val drop = str.split(" ").toMutableList()
-    return if (((drop.size != 3) || (drop[1]) !in month) || (drop[0].toIntOrNull() == null) || (drop[2].toIntOrNull() == null)) "" else {
-        val mon: String? = month[drop[1]]
-        val day = daysInMonth(mon!!.toInt(), drop[2].toInt())
-        if ((drop[0].toInt() <= day) && (drop[0].toInt() > 0)) {
-            drop[1] = mon.toString()
-            String.format("%02d.%s.%s", drop[0].toInt(), drop[1], drop[2])
+    val mon = drop.getOrNull(1)
+    val day = drop.getOrNull(0)?.toIntOrNull()
+    val year = drop.getOrNull(2)?.toIntOrNull()
+    return if ((drop.size != 3) || (mon !in month.keys) || (day == null) || (year == null)) "" else {
+        val numberOfMon = month[drop[1]]
+        val numberOfDay = daysInMonth(numberOfMon!!, year)
+        if ((day <= numberOfDay) && (day > 0)) {
+            drop[1] = numberOfMon.toString()
+            String.format("%02d.%02d.%s", day, numberOfMon, year)
         } else ""
     }
 }
@@ -109,29 +113,28 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val month = mapOf<String, String>(
-        "января" to "01",
-        "февраля" to "02",
-        "марта" to "03",
-        "апреля" to "04",
-        "майя" to "05",
-        "июня" to "06",
-        "июля" to "07",
-        "августа " to "08",
-        "сентября" to "09",
-        "октября" to "10",
-        "ноября" to "11",
-        "декабря" to "12"
+    val newMonth = mapOf<Int, String>(
+        1 to "января",
+        2 to "февраля",
+        3 to "марта",
+        4 to "апреля",
+        5 to "мая",
+        6 to "июня",
+        7 to "июля",
+        8 to "августа",
+        9 to "сентября",
+        10 to "октября",
+        11 to "ноября",
+        12 to "декабря"
     )
-    val newMonth = month.map { it.value to it.key }.toMap()
-    val list = digital.split(".").toMutableList()
-    return if ((list[1] !in newMonth) || (list.size != 3)) "" else {
-        val monthes = newMonth[list[1]]
-        if ((monthes != null) && (list[0].toIntOrNull() != null) && (list[2].toIntOrNull() != null)) {
-            if ((list[0].toInt() <= daysInMonth(list[1].toInt(), list[2].toInt())) && (list[0].toInt() > 0)) {
-                list[1] = monthes
-                String.format("%d %s %s", list[0].toInt(), list[1], list[2])
-            } else ""
+    val drop = digital.split(".")
+    val mon = drop.getOrNull(1)?.toIntOrNull()
+    val day = drop.getOrNull(0)?.toIntOrNull()
+    val year = drop.getOrNull(2)?.toIntOrNull()
+    return if ((drop.size != 3) || (mon == null) || (mon == 0) || (day == null) || (year == null) || (year == 0)) "" else {
+        if ((day > 0) && (day <= daysInMonth(mon, year))) {
+            val numberOfMon = newMonth[mon]
+            String.format("%d %s %d", day, numberOfMon, year)
         } else ""
     }
 }
@@ -150,7 +153,15 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val newHone = phone.filter { (it != ' ') && (it != '-') && (it != ')') && (it != '(') }
+    val regex = """(\+7\d*|\+\d*|\d*)""".toRegex()
+    val chek = """\((\D+)\)""".toRegex()
+    val result = regex.matchEntire(newHone)
+    println("re=$result, contain=${phone.contains('(')}, skskj=${chek.containsMatchIn(phone)}")
+    return if ((result == null) || (phone.contains("()")) || (chek.containsMatchIn(phone))) "" else newHone
+}
+
 
 /**
  * Средняя
@@ -159,10 +170,15 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * "706 - % 717 % 703".
  * В строке могут присутствовать числа, черточки - и знаки процента %, разделённые пробелами;
  * число соответствует удачному прыжку, - пропущенной попытке, % заступу.
- * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
+ * Прочитать строку  b и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val newJu = jumps.filter { (it != '-') && (it != '%') }.split(" ").filter { it != "" }
+    val op = """[^\d\s\-%]""".toRegex()
+    return if (op.containsMatchIn(jumps) || (newJu.isEmpty())) -1 else newJu.map { it.toInt() }.max()!!
+
+}
 
 /**
  * Сложная
@@ -175,7 +191,19 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val maxln = """[^ \+\%\-\d\s]""".toRegex()
+    val jump = maxln.containsMatchIn(jumps)
+    val not = """\d""".toRegex().containsMatchIn(jumps)
+    val justResult = mutableListOf<Int>()
+    return if (('+' !in jumps) || jump || !not) -1 else {
+        val almostResult = jumps.split(" ")
+        for (key in almostResult.indices) if ((key + 1 < almostResult.size) && (almostResult[key + 1].contains('+'))) justResult.add(
+            almostResult[key].toInt()
+        )
+        justResult.max()!!
+    }
+}
 
 /**
  * Сложная
@@ -186,7 +214,16 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val chek = """(\d+)(\s(\+|\-)\s\d+)*""".toRegex()
+    requireNotNull(chek.matchEntire(expression))
+    val result = expression.split(" ")
+    var plus = 0
+    var minus = 0
+    if (result.size < 3) return result[0].toInt()
+    for (key in 2 until result.size step 2) if ((result[key - 1] == "+")) plus += result[key].toInt() else minus += result[key].toInt()
+    return plus + result[0].toInt() - minus
+}
 
 /**
  * Сложная
@@ -197,7 +234,20 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val list = str.split(" ").map { it.toLowerCase() }
+    var thisWord = ""
+    var lenght = 0
+    if (list.size < 2) return -1 else
+        for (word in 0..list.size - 2) {
+            lenght += list[word].length + 1
+            if (list[word] == list[word + 1]) {
+                thisWord = list[word]
+                break
+            }
+        }
+    return if (thisWord == "") -1 else lenght - thisWord.length - 1
+}
 
 /**
  * Сложная
@@ -210,12 +260,24 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val map = mutableMapOf<Double, String>()
+    var max = 0.0
+    try {
+        val listWith = description.filter { (it != ';') }
+        val list = listWith.split(" ")
+        for (key in 1 until list.size step 2) map.put(list[key].toDouble(), list[key - 1])
+        max = map.keys.max()!!
+    } catch (e: Exception) {
+        return ""
+    }
+    return map[max]!!
+}
 
 /**
  * Сложная
  *
- * Перевести число roman, заданное в римской системе счисления,
+ * Перевести число roman, заданное в римской      счисления,
  * в десятичную систему и вернуть как результат.
  * Римские цифры: 1 = I, 4 = IV, 5 = V, 9 = IX, 10 = X, 40 = XL, 50 = L,
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
@@ -224,6 +286,7 @@ fun mostExpensive(description: String): String = TODO()
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int = TODO()
+
 
 /**
  * Очень сложная

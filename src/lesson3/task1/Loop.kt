@@ -326,6 +326,7 @@ fun fibSequenceDigit(n: Int): Int {
     var nun = 3
     var i = 1
     if ((n == 1) || (n == 2)) return 1
+    if (n == 3) return 2
     while (nun < n) {
         next = back + count0
         back = count0

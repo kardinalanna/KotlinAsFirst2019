@@ -110,6 +110,7 @@ class Tests {
         assertEquals(
             mapOf(5 to listOf("Михаил", "Семён"), 3 to listOf("Марат")),
             buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
+                .mapValues { (_, v) -> v.sorted() }
         )
         assertEquals(
             mapOf(3 to listOf("Марат", "Михаил", "Семён")),
@@ -271,17 +272,6 @@ class Tests {
     fun propagateHandshakes() {
         assertEquals(
             mapOf(
-                "Marat" to setOf("Mikhail"),
-                "Mikhail" to setOf()
-            ),
-            propagateHandshakes(
-                mapOf(
-                    "Marat" to setOf("Mikhail")
-                )
-            )
-        )
-       assertEquals(
-            mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
                 "Sveta" to setOf("Mikhail"),
                 "Mikhail" to setOf()
@@ -328,7 +318,6 @@ class Tests {
             Pair(0, 1),
             findSumOfTwo(listOf(0, 0), 0)
         )
-
 
 
     }
