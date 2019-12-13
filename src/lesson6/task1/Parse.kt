@@ -131,7 +131,7 @@ fun dateDigitToStr(digital: String): String {
     val mon = drop.getOrNull(1)?.toIntOrNull()
     val day = drop.getOrNull(0)?.toIntOrNull()
     val year = drop.getOrNull(2)?.toIntOrNull()
-    return if ((drop.size != 3) || (mon == null) || (mon !in 1..12) || (day == null) || (year == null) || (year == 0)) "" else {
+    return if ((drop.size != 3) || (mon == null) || (mon !in 1..12) || (day == null) || (year == null)) "" else {
         if ((day > 0) && (day <= daysInMonth(mon, year))) {
             val numberOfMon = newMonth[mon]
             String.format("%d %s %d", day, numberOfMon, year)
