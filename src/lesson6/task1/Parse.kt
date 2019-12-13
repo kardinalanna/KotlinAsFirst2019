@@ -81,7 +81,7 @@ fun dateStrToDigit(str: String): String {
         "мая" to 5,
         "июня" to 6,
         "июля" to 7,
-        "августа " to 8,
+        "августа" to 8,
         "сентября" to 9,
         "октября" to 10,
         "ноября" to 11,
@@ -131,7 +131,7 @@ fun dateDigitToStr(digital: String): String {
     val mon = drop.getOrNull(1)?.toIntOrNull()
     val day = drop.getOrNull(0)?.toIntOrNull()
     val year = drop.getOrNull(2)?.toIntOrNull()
-    return if ((drop.size != 3) || (mon == null) || (mon == 0) || (day == null) || (year == null) || (year == 0)) "" else {
+    return if ((drop.size != 3) || (mon == null) || (mon !in 1..12) || (day == null) || (year == null) || (year == 0)) "" else {
         if ((day > 0) && (day <= daysInMonth(mon, year))) {
             val numberOfMon = newMonth[mon]
             String.format("%d %s %d", day, numberOfMon, year)
