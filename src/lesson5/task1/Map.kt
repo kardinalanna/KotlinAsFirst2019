@@ -250,8 +250,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
-    for (element in list.toSet()) {
-        if (element !in map.keys) map.put(element, list.count { it == element })
+    for (element in list) {
+        map[element] = map[element] ?: 0 + 1
     }
     return map.filter { it.value > 1 }
 }
@@ -265,13 +265,21 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
+fun forHasAnagrams(list: List<Char>): Map<Char, Int> {
+    val map = mutableMapOf<Char, Int>()
+    for (element in list) {
+        map[element] = map[element] ?: 0 + 1
+    }
+    return map
+}
+
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.isEmpty()) return false
-    val newWords = mutableListOf<Map<String, Int>>()
-    words.mapTo(newWords) { it -> extractRepeats(it.map { it.toString() }) }
+    val newWords = mutableListOf<Map<Char, Int>>()
+    for (element in words) newWords.add(forHasAnagrams(element.toList()))
     for (key1 in 0 until (newWords.size - 1)) {
         for (key2 in (key1 + 1) until (newWords.size)) {
-            if (newWords[key1] == newWords[key2] && (words[key1].toSet() == words[key2].toSet())) return true
+            if (newWords[key1] == newWords[key2]) return true
         }
     }
     return false
@@ -306,18 +314,21 @@ fun hasAnagrams(words: List<String>): Boolean {
 
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = friends.toMutableMap()
-    var finihSize = 0
     for ((key, value) in friends) {
-        var setSize = 1
+        var finihSize = -1
+        var setSize = result[key]!!.size
         while (finihSize != setSize) {
-            for (string in value) {
+            setSize = result[key]!!.size
+            for (string in result[key]!!) {
                 if (friends[string] == null) {
                     result.put(string, setOf())
                     finihSize = result[key]!!.size
                     continue
+                } else {
+                    val sum = result[key]!!
+                    result[key] = sum + (friends[string]!! - key)
+                    finihSize = result[key]!!.size
                 }
-                result.put(key, value + (friends[string] ?: error("")) - key)
-                finihSize = result[key]!!.size
             }
         }
     }
@@ -376,3 +387,26 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  *        */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

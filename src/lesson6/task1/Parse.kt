@@ -87,18 +87,19 @@ fun dateStrToDigit(str: String): String {
         "ноября" to 11,
         "декабря" to 12
     )
-    val drop = str.split(" ").toMutableList()
-    val mon = drop.getOrNull(1)
-    val day = drop.getOrNull(0)?.toIntOrNull()
-    val year = drop.getOrNull(2)?.toIntOrNull()
-    return if ((drop.size != 3) || (mon !in month.keys) || (day == null) || (year == null)) "" else {
-        val numberOfMon = month[drop[1]]
-        val numberOfDay = daysInMonth(numberOfMon!!, year)
-        if ((day <= numberOfDay) && (day > 0)) {
-            drop[1] = numberOfMon.toString()
-            String.format("%02d.%02d.%s", day, numberOfMon, year)
-        } else ""
-    }
+    val drop = str.split(" ")
+    if (drop.size == 3) {
+        val mon = drop[1]
+        val day = drop[0].toInt()
+        val year = drop[2].toInt()
+        return if ((mon !in month.keys) || (day <= 0)) "" else {
+            val numberOfMon = month[drop[1]]
+            val numberOfDay = daysInMonth(numberOfMon!!, year)
+            if ((day <= numberOfDay)) {
+                String.format("%02d.%02d.%s", day, numberOfMon, year)
+            } else ""
+        }
+    } else return ""
 }
 
 
@@ -113,30 +114,33 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val newMonth = mapOf<Int, String>(
-        1 to "января",
-        2 to "февраля",
-        3 to "марта",
-        4 to "апреля",
-        5 to "мая",
-        6 to "июня",
-        7 to "июля",
-        8 to "августа",
-        9 to "сентября",
-        10 to "октября",
-        11 to "ноября",
-        12 to "декабря"
+    val newMonth = listOf<String>(
+        "месяцы",
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
     )
     val drop = digital.split(".")
-    val mon = drop.getOrNull(1)?.toIntOrNull()
-    val day = drop.getOrNull(0)?.toIntOrNull()
-    val year = drop.getOrNull(2)?.toIntOrNull()
-    return if ((drop.size != 3) || (mon == null) || (mon !in 1..12) || (day == null) || (year == null)) "" else {
-        if ((day > 0) && (day <= daysInMonth(mon, year))) {
-            val numberOfMon = newMonth[mon]
-            String.format("%d %s %d", day, numberOfMon, year)
-        } else ""
-    }
+    if (drop.size == 3) {
+        val mon = drop[1].toIntOrNull()
+        val day = drop[0].toIntOrNull()
+        val year = drop[2].toIntOrNull()
+        return if ((mon == null) || (mon !in 1..12) || (day == null) || (year == null) || (day <= 0)) "" else {
+            if ((day <= daysInMonth(mon, year))) {
+                val numberOfMon = newMonth[mon]
+                String.format("%d %s %d", day, numberOfMon, year)
+            } else ""
+        }
+    } else return ""
 }
 
 /**
@@ -154,12 +158,12 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    val newHone = phone.filter { (it != ' ') && (it != '-') && (it != ')') && (it != '(') }
-    val regex = """(\+7\d*|\+\d*|\d*)""".toRegex()
-    val chek = """\((\D+)\)""".toRegex()
-    val result = regex.matchEntire(newHone)
-    println("re=$result, contain=${phone.contains('(')}, skskj=${chek.containsMatchIn(phone)}")
-    return if ((result == null) || (phone.contains("()")) || (chek.containsMatchIn(phone))) "" else newHone
+    val check = """\((\D+)\)""".toRegex()
+    if (phone.contains("(") && (check.matches(phone))) return ""
+    val newHpone = phone.filter { (it != ' ') && (it != '-') && (it != ')') && (it != '(') }
+    val regex = """(\+\d*|\d*)""".toRegex()
+    val result = regex.matchEntire(newHpone)
+    return if ((result == null) || (phone.contains("()")) || (check.containsMatchIn(phone))) "" else newHpone
 }
 
 
@@ -175,8 +179,8 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     val newJu = jumps.filter { (it != '-') && (it != '%') }.split(" ").filter { it != "" }
-    val op = """[^\d\s\-%]""".toRegex()
-    return if (op.containsMatchIn(jumps) || (newJu.isEmpty())) -1 else newJu.map { it.toInt() }.max()!!
+    val op = """(\d+\s((\-\s)+|(\%\s))+)+""".toRegex()
+    return if (op.containsMatchIn(jumps)) newJu.map { it.toInt() }.max()!! else -1
 
 }
 
@@ -192,13 +196,17 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val maxln = """[^ \+\%\-\d\s]""".toRegex()
-    val jump = maxln.containsMatchIn(jumps)
-    val not = """\d""".toRegex().containsMatchIn(jumps)
+    val regex = """[^ \+\%\-\d\s]""".toRegex()
+    val chekcPluss = """((\+\s){2,})""".toRegex().containsMatchIn(jumps)
+    val jumpIsRight = regex.containsMatchIn(jumps)
+    val check = """\d*""".toRegex().containsMatchIn(jumps)
     val justResult = mutableListOf<Int>()
-    return if (('+' !in jumps) || jump || !not) -1 else {
+    return if (('+' !in jumps) || jumpIsRight || !check || chekcPluss) -1 else {
         val almostResult = jumps.split(" ")
-        for (key in almostResult.indices) if ((key + 1 < almostResult.size) && (almostResult[key + 1].contains('+'))) justResult.add(
+        for (key in almostResult.indices step 2) if ((almostResult[key + 1].contains('+')) && ("""\d*""".toRegex().matches(
+                almostResult[key]
+            ))
+        ) justResult.add(
             almostResult[key].toInt()
         )
         justResult.max()!!
@@ -216,13 +224,14 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val chek = """(\d+)(\s(\+|\-)\s\d+)*""".toRegex()
-    requireNotNull(chek.matchEntire(expression))
+    requireNotNull(chek.matches(expression))
     val result = expression.split(" ")
+    var count = 0
     var plus = 0
     var minus = 0
     if (result.size < 3) return result[0].toInt()
-    for (key in 2 until result.size step 2) if ((result[key - 1] == "+")) plus += result[key].toInt() else minus += result[key].toInt()
-    return plus + result[0].toInt() - minus
+    for (key in 2 until result.size step 2) if ((result[key - 1] == "+")) count += result[key].toInt() else count += result[key].toInt()
+    return count
 }
 
 /**
@@ -236,17 +245,15 @@ fun plusMinus(expression: String): Int {
  */
 fun firstDuplicateIndex(str: String): Int {
     val list = str.split(" ").map { it.toLowerCase() }
-    var thisWord = ""
     var lenght = 0
     if (list.size < 2) return -1 else
         for (word in 0..list.size - 2) {
             lenght += list[word].length + 1
             if (list[word] == list[word + 1]) {
-                thisWord = list[word]
-                break
+                return lenght - list[word].length - 1
             }
         }
-    return if (thisWord == "") -1 else lenght - thisWord.length - 1
+    return -1
 }
 
 /**
@@ -263,15 +270,20 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     val map = mutableMapOf<Double, String>()
     var max = 0.0
-    try {
-        val listWith = description.filter { (it != ';') }
-        val list = listWith.split(" ")
-        for (key in 1 until list.size step 2) map.put(list[key].toDouble(), list[key - 1])
-        max = map.keys.max()!!
-    } catch (e: Exception) {
-        return ""
+    var nameOfGood = ""
+    if (description.isEmpty()) return ""
+    val list = description.split("; ")
+    for (key in list) {
+        val element = key.split(" ")
+        var prise = element[1].toDouble()
+        if ((element.size != 2) || (prise < 0)) return "" else {
+            if (prise > max) {
+                max = prise
+                nameOfGood = element[0]
+            }
+        }
     }
-    return map[max]!!
+    return nameOfGood
 }
 
 /**

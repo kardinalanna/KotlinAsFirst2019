@@ -305,7 +305,7 @@ fun decimalFromString(str: String, base: Int): Int {
     for (i in str.indices) result += (pow(
         base,
         str.length - i - 1
-    )) * if (str[i] <= '9') (str[i] - '0') else (str[i] - 'W')
+    )) * if (str[i] <= '9') (str[i] - '0') else (str[i] - 'a' + 10)
     return result
 }
 
