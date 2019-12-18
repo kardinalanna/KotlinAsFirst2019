@@ -259,14 +259,15 @@ fun firstDuplicateIndex(str: String): Int {
  *
  * Строка содержит названия товаров и цены на них в формате вида
  * "Хлеб 39.9; Молоко 62; Курица 184.0; Конфеты 89.9".
- * То есть, название товара отделено от цены пробелом,
+ * То есть, название товара отделено от  пробелом,
  * а цена отделена от названия следующего товара точкой с запятой и пробелом.
  * Вернуть название самого дорогого товара в списке (в примере это Курица),
- * или пустую строку при нарушении формата строки.
+ * или пустую строку при нарушении формата строки.цены
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
     val map = mutableMapOf<Double, String>()
+   // if (!"""([а-яА-Я]+\s(\d+\.\d)(;\s|\s))+""".toRegex().matches(description)) return ""
     var max = 0.0
     var nameOfGood = ""
     if (description.isEmpty()) return ""
@@ -275,13 +276,13 @@ fun mostExpensive(description: String): String {
         val element = key.split(" ")
         var prise = element[1].toDouble()
         if ((element.size != 2) || (prise < 0)) return "" else {
-            if (prise > max) {
+            if (prise >= max) {
                 max = prise
                 nameOfGood = element[0]
             }
         }
     }
-    return if (max == 0.0) list[0] else nameOfGood
+    return nameOfGood
 }
 
 /**

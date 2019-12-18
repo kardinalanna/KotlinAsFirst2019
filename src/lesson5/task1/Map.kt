@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.lang.StringBuilder
+
 
 /**
  * Пример

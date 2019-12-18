@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 /**
  * Пример
@@ -165,9 +166,47 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-   val outputStream = File(outputName).bufferedWriter()
-    val maxLenght = 0
+    val outputStream = File(outputName).bufferedWriter()
+    val regex = """\s+""".toRegex()
+    var lenghtOfWord = 0
+    var maxLenght = 0
+    var countOfSplit = 0
+    var addSplit = -1
+    val bildString = java.lang.StringBuilder()
+    for (line in File(inputName).readLines()) {
+        val lenght = regex.replace(line, " ").trim().length
+        if (lenght > maxLenght) maxLenght = lenght
+    }
+    for (line in File(inputName).readLines()) {
+        if (regex.matches(line) || (line == "")) {
+            outputStream.newLine()
+            continue
+        }
+        if (line.length == maxLenght) {
+            outputStream.write(line)
+            continue}
+        val listOfWord = line.trim().split("""\s+""".toRegex())
+        listOfWord.forEach { lenghtOfWord += it.length }
+        if (listOfWord.size == 1) {
+            outputStream.write(listOfWord[0])
+            outputStream.newLine()
+            continue
+        }
+        countOfSplit = (maxLenght - lenghtOfWord) / listOfWord.size - 1
+        addSplit = (maxLenght - lenghtOfWord) % listOfWord.size - 1
+        for (value in 0..(listOfWord.size - 2)) {
+            if (addSplit != 0) {
+                outputStream.write(listOfWord[value].padEnd(countOfSplit + 1))
+                // outputStream.write(listOfWord.last())
+                addSplit--
 
+            } else outputStream.write(listOfWord[value].padEnd(countOfSplit))
+        }
+        outputStream.write(listOfWord.last())
+        outputStream.newLine()
+        lenghtOfWord = 0
+    }
+    outputStream.close()
 }
 
 /**
