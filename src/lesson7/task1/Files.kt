@@ -59,7 +59,6 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (element in substrings) {
         for (word in split.windowed(element.length)) {
             if (word == element.toLowerCase().toList()) {
-                println(word.toString())
                 val count = resultMap[element]!!
                 resultMap[element] = 1 + count
             }
@@ -165,7 +164,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+
 }
 
 /**

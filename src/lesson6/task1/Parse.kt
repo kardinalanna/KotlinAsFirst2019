@@ -90,9 +90,9 @@ fun dateStrToDigit(str: String): String {
     val drop = str.split(" ")
     if (drop.size == 3) {
         val mon = drop[1]
-        val day = drop[0].toInt()
-        val year = drop[2].toInt()
-        return if ((mon !in month.keys) || (day <= 0)) "" else {
+        val day = drop[0].toIntOrNull()
+        val year = drop[2].toIntOrNull()
+        return if ((mon !in month.keys) || (day == null) || (year == null) || (day <= 0)) "" else {
             val numberOfMon = month[drop[1]]
             val numberOfDay = daysInMonth(numberOfMon!!, year)
             if ((day <= numberOfDay)) {
@@ -224,14 +224,12 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val chek = """(\d+)(\s(\+|\-)\s\d+)*""".toRegex()
-    requireNotNull(chek.matches(expression))
+    if (!requireNotNull(chek.matches(expression))) throw IllegalArgumentException()
     val result = expression.split(" ")
     var count = 0
-    var plus = 0
-    var minus = 0
     if (result.size < 3) return result[0].toInt()
-    for (key in 2 until result.size step 2) if ((result[key - 1] == "+")) count += result[key].toInt() else count += result[key].toInt()
-    return count
+    for (key in 2 until result.size step 2) if ((result[key - 1] == "+")) count += result[key].toInt() else count -= result[key].toInt()
+    return count + result[0].toInt()
 }
 
 /**
@@ -283,7 +281,7 @@ fun mostExpensive(description: String): String {
             }
         }
     }
-    return nameOfGood
+    return if (max == 0.0) "Any good with price 0.0" else nameOfGood
 }
 
 /**
