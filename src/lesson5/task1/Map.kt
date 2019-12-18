@@ -323,14 +323,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             for (string in result[key]!!) {
                 if (friends[string] == null) {
                     result.put(string, setOf())
-                    finihSize = result[key]!!.size
                     continue
-                } else {
-                    val sum = result[key]!!
-                    result[key] = sum + (friends[string]!! - key)
-                    finihSize = result[key]!!.size
                 }
+                val sum = result[key]!!
+                result[key] = sum + (friends[string]!! - key)
             }
+            finihSize = result[key]!!.size
         }
     }
     return result
