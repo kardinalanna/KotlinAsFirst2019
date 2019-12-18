@@ -55,7 +55,8 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val resultMap = mutableMapOf<String, Int>()
     for (element in substrings) resultMap[element] = 0
-    val split = File(inputName).readText().map { it.toLowerCase() }.filter { it != ' ' }
+    if (inputName == "") return mapOf<String, Int>("" to 0)
+    val split = File(inputName).readText().map { it.toLowerCase() }
     for (element in substrings) {
         for (word in split.windowed(element.length)) {
             if (word == element.toLowerCase().toList()) {
@@ -164,6 +165,8 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
+   val outputStream = File(outputName).bufferedWriter()
+    val maxLenght = 0
 
 }
 
