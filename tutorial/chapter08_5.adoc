@@ -36,25 +36,25 @@ image::https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Knight%27s_grap
 ----
 class Graph {
     private data class Vertex(val name: String) {
-        val neighbors = mutableSetOf<Vertex>()
+        val neighbors = mutableSetOf<Vertex>()   //(свойствоо) здесь будет храниттся информация о вершинах, соединеных ребром с данной
     }
 
-    private val vertices = mutableMapOf<String, Vertex>()
+    private val vertices = mutableMapOf<String, Vertex>()  //(своймтво) информайия о вершинах графа
 
-    private operator fun get(name: String) = vertices[name] ?: throw IllegalArgumentException()
+    private operator fun get(name: String) = vertices[name] ?: throw IllegalArgumentException()  //не вижно снаружи, личное дело класса
 
     fun addVertex(name: String) {
-        vertices[name] = Vertex(name)
+        vertices[name] = Vertex(name)  //(ф-ия класса) добавляеи вершину
     }
 
-    private fun connect(first: Vertex, second: Vertex) {
-        first.neighbors.add(second)
-        second.neighbors.add(first)
+    private fun connect(first: Vertex, second: Vertex) {   // приватное дело класса, не видно снаружи
+        first.neighbors.add(second)                        // никто, кроме членов класса не может изменить `private`
+        second.neighbors.add(first)                        //
     }
+                                                                                         \\ использованеи connect и addVertex изменяет граф (как кнопки)
+    fun connect(first: String, second: String) = connect(this[first], this[second])      //(ф-ия кдасса) добывляем новое ребро
 
-    fun connect(first: String, second: String) = connect(this[first], this[second])
-
-    fun neighbors(name: String) = vertices[name]?.neighbors?.map { it.name } ?: listOf()
+    fun neighbors(name: String) = vertices[name]?.neighbors?.map { it.name } ?: listOf() \\не изменяет грвф, индикатор
 }
 ----
 
@@ -129,6 +129,32 @@ fun useGraph() {
 а также индикатор `neighbors` (вызов соответствующей функции не изменяет граф).
 Всё остальное находится внутри капсулы и не видно снаружи;
 закрытое содержимое графа является его личным (приватным) делом.
+
+----
+class Graph {
+    private data class Vertex(val name: String) { \\этот класс может использоаться только внутри класса Graf
+                                                 //свойство вершины name
+        val neighbors = mutableSetOf<Vertex>()   //(свойствоо) здесь будет храниттся информация о вершинах, соединеных ребром с данной
+    }                                            //изначально оно пустое, но connect расширяет его(добав. точки в m-list
+                                                 //в множестве не может храниться ОДИНАКОВЫЕ эдементы. Преемущество - быстрый поиск элементов( element in set), недостатки - нельзя обратиться по индексу (set[i])
+    private val vertices = mutableMapOf<String, Vertex>()  //(своймтво) информайия о вершинах графа
+
+    private operator fun get(name: String) = vertices[name] ?: throw IllegalArgumentException()  //не вижно снаружи, личное дело класса
+
+    fun addVertex(name: String) {
+        vertices[name] = Vertex(name)  //(ф-ия класса) добавляеи вершину
+    }
+
+    private fun connect(first: Vertex, second: Vertex) {   // приватное дело класса, не видно снаружи
+        first.neighbors.add(second)                        // никто, кроме членов класса не может изменить `private`
+        second.neighbors.add(first)                        //
+    }
+                                                                                     \\ использованеи connect и addVertex изменяет граф (как кнопки)
+    fun connect(first: String, second: String) = connect(this[first], this[second])  //(ф-ия кдасса) добывляем новое ребро
+
+    fun neighbors(name: String) = vertices[name]?.neighbors?.map { it.name } ?: listOf() \\не изменяет грвф, индикатор
+}                                 //обращаемся к вершине и получаем для нее хначение neighbors
+----
 
 == Вложенные классы
 
@@ -215,6 +241,40 @@ val map = mapOf("John" to 87, "Mike" to 41, "Fred" to 24)
 Это так называемая нулевая ссылка, которая уже встречалась нам в шестом уроке.
 Тип результата операции обращения по индексу в данном случае `Int?`, что означает `Int` либо **null**.
 
+----
+class Graph {
+    private data class Vertex(val name: String) { \\этот класс может использоаться только внутри класса Graf
+                                                 //свойство вершины name
+        val neighbors = mutableSetOf<Vertex>()   //(свойствоо) здесь будет храниттся информация о вершинах, соединеных ребром с данной
+    }                                            //изначально оно пустое, но connect расширяет его(добав. точки в m-list
+                                                 //в множестве не может храниться ОДИНАКОВЫЕ эдементы. Преемущество - быстрый поиск элементов( element in set), недостатки - нельзя обратиться по индексу (set[i])
+    private val vertices = mutableMapOf<String, Vertex>()  //(своймтво) информайия о вершинах графа
+
+    private operator fun get(name: String) = vertices[name] ?: throw IllegalArgumentException()
+            //оператор переопределяет работу некоторого оператора, оператор привязывается к имени функции
+            //здесь опратор индексации, т.е. по имени name можем достать вершину из графа (g[name])
+                                                                                                    //не вижно снаружи, личное дело класса
+
+    fun addVertex(name: String) {
+        vertices[name] = Vertex(name)  //(ф-ия класса) добавляеи вершину
+    }
+
+    private fun connect(first: Vertex, second: Vertex) {   // приватное дело класса, не видно снаружи
+        first.neighbors.add(second)                        // никто, кроме членов класса не может изменить `private`
+        second.neighbors.add(first)                        //
+    }
+                                                                                     \\ использованеи connect и addVertex изменяет граф (как кнопки)
+    fun connect(first: String, second: String) = connect(this[first], this[second])  //(ф-ия кдасса) добывляем новое ребро
+                            //тип String         //тип connect - Vertex              //перезагркженный оператор, вызывает другую функция для перехода от названия
+                                                                                     //вершины к самой вершине
+                                                                                     //this - граф-получатель (граф, на котором вызвана connect)
+
+    fun neighbors(name: String) = vertices[name]?.neighbors?.map { it.name } ?: listOf() \\не изменяет грвф, индикатор
+}                                 //обращаемся к вершине ( вершина: Vertex) и получаем для нее хначение .neighbors тип `MutableSet<Vertex>?`
+                                  //map {it.mame} - замещает каждую вершину ее именем тип `List<String>`
+----
+
+
 == Безопасные операции
 
 Рассмотрим теперь подробнее функцию `neighbors()` из класса `Graph`:
@@ -262,6 +322,8 @@ private operator fun get(name: String) = vertices[name] ?: throw IllegalArgument
 работу того или иного оператора. Конкретный оператор в Котлине привязывается к названию функции.
 Функции `get` соответствует оператор индексации, то есть, имея граф `g`,
 мы сможем достать у него вершину по имени с помощью `g[name]`.
+
+    private operator fun get(name: String) = vertices[name] ?: throw IllegalArgumentException()
 
 В теле функции мы обращаемся к карте `vertices`, получая из неё `Vertex?`.
 Далее вновь используется Элвис-оператор, в правой части которого генерируется исключение,
@@ -364,11 +426,11 @@ BFS = Breadth-First Search.
 fun bfs(start: String, finish: String) = bfs(this[start], this[finish])
 
 private fun bfs(start: Vertex, finish: Vertex): Int {
-    val queue = ArrayDeque<Vertex>()
-    queue.add(start)
+    val queue = ArrayDeque<Vertex>()              \\очередь вершин
+    queue.add(start)               \\добавляем значенеи в коенец очереди
     val visited = mutableMapOf(start to 0)
     while (queue.isNotEmpty()) {
-        val next = queue.poll()
+        val next = queue.poll()           \\вызываем значение из начала очреди
         val distance = visited[next]!!
         if (next == finish) return distance
         for (neighbor in next.neighbors) {

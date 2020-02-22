@@ -2,6 +2,8 @@
 
 package lesson8.task1
 
+import kotlin.math.abs
+
 /**
  * Точка (гекс) на шестиугольной сетке.
  * Координаты заданы как в примере (первая цифра - y, вторая цифра - x)
@@ -13,6 +15,10 @@ package lesson8.task1
  *   21  22  23  24  25  26  27  28
  *     12  13  14  15  16  17  18
  *       03  04  05  06  07  08
+ *
+ *
+ * abs(y - other.y) + abs(abs(x - abs(other.y - y)) - other.x)
+ * 3                           3                  2
  *
  * В примерах к задачам используются те же обозначения точек,
  * к примеру, 16 соответствует HexPoint(x = 6, y = 1), а 41 -- HexPoint(x = 1, y = 4).
@@ -36,9 +42,8 @@ data class HexPoint(val x: Int, val y: Int) {
      * Расстояние вычисляется как число единичных отрезков в пути между двумя гексами.
      * Например, путь межу гексами 16 и 41 (см. выше) может проходить через 25, 34, 43 и 42 и имеет длину 5.
      */
-    fun distance(other: HexPoint): Int = TODO()
-
-    override fun toString(): String = "$y.$x"
+    fun distance(other: HexPoint): Int = abs(y - other.y) + abs(abs(x - abs(other.y - y)) - other.x)
+    // override fun(): String = "$y.$x"
 }
 
 /**
@@ -60,6 +65,7 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      * (расстояние между точками 32 и 24)
      */
     fun distance(other: Hexagon): Int = TODO()
+
 
     /**
      * Тривиальная

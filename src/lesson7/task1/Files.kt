@@ -2,7 +2,12 @@
 
 package lesson7.task1
 
+import kotlinx.html.I
+import lesson2.task2.daysInMonth
+import java.io.BufferedWriter
 import java.io.File
+import java.io.IOException
+import java.lang.IllegalArgumentException
 import kotlin.math.max
 
 /**
@@ -111,6 +116,7 @@ fun sibilants(inputName: String, outputName: String) {
             } else resultString.append(str2)
         }
         outputStream.write(resultString.toString())
+        println(outputStream)
         resultString.clear()
         outputStream.newLine()
     }
@@ -135,7 +141,24 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val regex = """\s+""".toRegex()
+    var maxLenght = 0
+    var u = 0
+    var countOfSpase = 0
+    for (line in File(inputName).readLines()) {   //нахпоим длиннейщую строку
+        val lenght = line.trim().length
+        if (lenght > maxLenght) maxLenght = lenght
+    }
+    for (line in File(inputName).readLines()) {
+        val length = line.trim().length
+        countOfSpase = (maxLenght - length) / 2
+        for (i in 0..countOfSpase) outputStream.write(" ")
+        outputStream.write(line.trim())
+        outputStream.newLine()
+        println(outputStream)
+    }
+    outputStream.close()
 }
 
 /**
@@ -165,6 +188,89 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+
+fun theLongestLine(inputLines: List<String>, wantToCenter: Boolean): List<String> {
+    var count = 0
+    val outputLines = mutableListOf<String>()
+    for (i in inputLines.indices) {
+        if (wantToCenter) {
+            val lineWithOutSpaces = inputLines[i].trim()
+            outputLines.add(lineWithOutSpaces)
+            val currentLength = lineWithOutSpaces.length
+            if (currentLength > count) count = currentLength
+        } else {
+            val splitted = inputLines[i].split(" ").filter { it != "" }
+            val currentLength = inputLines[i].count { it != ' ' } + splitted.size - 1
+            if (currentLength > count) count = currentLength
+            outputLines.add(splitted.joinToString(" "))
+        }
+    }
+    outputLines.add("$count")
+    return outputLines
+}
+
+fun alignFileByWidth(inputName: String, outputName: String) {
+    val inputStream = theLongestLine(File(inputName).readLines(), false)
+    val outputStream = File(outputName).bufferedWriter()
+    val largestLength = inputStream.last().toInt()
+    for (line in inputStream) {
+        if (line.toIntOrNull() != null) continue
+        if (line.isNotBlank()) {
+            var currentLength = 0
+            var countOfSpaces = 0
+            val splitted = line.split(" ")
+            val length = line.count { it != ' ' }
+            val numberOfSpace =
+                (largestLength - length) / if (splitted.size != 1) splitted.size - 1 else 1
+            for (index in splitted.indices) {
+                val word = splitted[index]
+                currentLength += word.length
+                if (index == splitted.lastIndex) {
+                    outputStream.write(splitted[index])
+                    continue
+                }
+                if (length + countOfSpaces + (splitted.size - 1 - index) * numberOfSpace != largestLength) {
+                    outputStream.write(word.padEnd(word.length + numberOfSpace + 1, ' '))
+                    countOfSpaces += 1
+                } else outputStream.write(word.padEnd(word.length + numberOfSpace, ' '))
+                countOfSpaces += numberOfSpace
+            }
+        }
+        outputStream.newLine()
+    }
+    outputStream.close()
+}
+
+
+/*
+fun countOfSpace(listOfWord: List<String>, maxLenght: Int, lenghtOfWord: Int, outputName: String ):Unit {
+    val countOfSplit = (maxLenght - lenghtOfWord) / listOfWord.size - 1
+    var addSplit = (maxLenght - lenghtOfWord) % listOfWord.size - 1
+    val outputStream = File(outputName).bufferedWriter()
+    for (value in 0..(listOfWord.size - 2)) {
+        if (addSplit != 0) {
+            outputStream.write(listOfWord[value].padEnd(countOfSplit + 1))
+            addSplit -= 1
+        } else outputStream.write(listOfWord[value].padEnd(countOfSplit))
+    }
+    outputStream.write(listOfWord.last())
+    outputStream.newLine()
+    }
+
+
+val dhhd = """jfj""".to
+val line.mathes("""jhdjgdfj""".toRegex
+
+
+
+
+
+
+
+
+
+
+
 fun alignFileByWidth(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
     val regex = """\s+""".toRegex()
@@ -184,8 +290,11 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         }
         if (line.length == maxLenght) {
             outputStream.write(line)
-            continue}
-        val listOfWord = line.trim().split("""\s+""".toRegex())
+            outputStream.newLine()
+            continue
+        }
+        val listOfWord = line.trim().split(regex)
+        lenghtOfWord = 0
         listOfWord.forEach { lenghtOfWord += it.length }
         if (listOfWord.size == 1) {
             outputStream.write(listOfWord[0])
@@ -193,21 +302,32 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             continue
         }
         countOfSplit = (maxLenght - lenghtOfWord) / listOfWord.size - 1
-        addSplit = (maxLenght - lenghtOfWord) % listOfWord.size - 1
-        for (value in 0..(listOfWord.size - 2)) {
-            if (addSplit != 0) {
-                outputStream.write(listOfWord[value].padEnd(countOfSplit + 1))
-                // outputStream.write(listOfWord.last())
-                addSplit--
-
-            } else outputStream.write(listOfWord[value].padEnd(countOfSplit))
-        }
-        outputStream.write(listOfWord.last())
-        outputStream.newLine()
-        lenghtOfWord = 0
+        if (countOfSplit == 0) {
+            var residue = mutableListOf<String>()
+            while (countOfSplit < 1) {
+                residue.add(listOfWord.last())
+                listOfWord.dropLast(1)
+                countOfSplit = (maxLenght - lenghtOfWord) / listOfWord.size - 1
+                addSplit =
+                    (maxLenght - lenghtOfWord) % listOfWord.size - 1                    //перенос на новую строеку
+            }
+            countOfSpace(listOfWord,maxLenght, lenghtOfWord, outputName)
+            countOfSpace(residue,maxLenght, lenghtOfWord, outputName)
+            continue
+        } else countOfSpace(listOfWord,maxLenght, lenghtOfWord, outputName)
+        continue
     }
     outputStream.close()
 }
+
+fun main() {
+    var t = 0
+    val k = ("Вывести его в выходной файл с именем outputName, выровняв по левому и правому краю относительно".split(" "))
+   k.forEach{t += it.length}
+    println(k)
+println(t)
+}
+*/
 
 /**
  * Средняя
@@ -227,7 +347,24 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    var result = mutableMapOf<String, Int>()
+    val map = mutableMapOf<String, Int>()
+    for (line in File(inputName).readLines()) {
+        val reg = """[ ?\—\»\«]""".toRegex()
+        val newline = line.toLowerCase().split(reg).filter { it != "" }
+        if (newline.isEmpty()) continue
+        for (word in newline) if (word in result.keys) {
+            val y = result[word]!!
+            result[word] = y + 1
+        } else result[word] = 1
+    }
+    result = result.toList().sortedByDescending { it.second }.toMap().toMutableMap()
+    return if (result.size < 20) result else {
+        for ((key, vall) in result) if (map.size < 20) map[key] = vall
+        map
+    }
+}
 
 /**
  * Средняя
@@ -265,7 +402,21 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val mapP = mutableMapOf<Char, String>()
+    for ((key, value) in dictionary) mapP[key.toLowerCase()] = value.toLowerCase()
+    val outputStream = File(outputName).bufferedWriter()
+    for (leter in File(inputName).readText()) {
+        if (leter in mapP.keys || leter.toLowerCase() in mapP.keys) {
+            if (leter.toString().matches("""[A-ZА-Я]""".toRegex())) {
+                val string = mapP[leter.toLowerCase()]!!
+                if (string.toCharArray().size != 1) {
+                    outputStream.write(string[0].toString().toUpperCase())
+                    for (i in 1..string.toCharArray().size - 1) outputStream.write(string[i].toString())
+                }
+            } else outputStream.write(mapP[leter]!!)
+        } else outputStream.write(leter.toString())
+    }
+    outputStream.close()
 }
 
 /**
@@ -513,4 +664,101 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
+
+//daysInMonth
+fun calendar(inputName: String, tStart: String, tEnd: String): List<String> {
+    val weekDay = mapOf<Int, Int>(
+        1 to 3,
+        2 to 6,
+        3 to 7,
+        4 to 3,
+        5 to 5,
+        6 to 1,
+        7 to 3,
+        8 to 6,
+        9 to 2,
+        10 to 4,
+        11 to 7,
+        12 to 2
+    )
+    val reg = """\d\d.\d\d""".toRegex()
+    if (!tStart.matches(reg) || !tEnd.matches(reg)) throw IllegalArgumentException()
+    val startMonth = tStart.split(".")[1].toInt()
+    val endMonth = tEnd.split(".")[1].toInt()
+    var starDay = tStart.split(".")[0].toInt()
+    val endDay = tEnd.split(".")[0].toInt()
+    val listOfMonth = mutableMapOf<Int, Int>()
+    val inp = File(inputName).readText().split(", ")
+    val result = mutableListOf<String>()
+    var week = weekDay[startMonth]!!
+    for (i in 1 until starDay) if (week != 7) week++ else week = 1
+
+    for (i in startMonth..endMonth) listOfMonth[i] = daysInMonth(i, 2020)
+    for (mon in listOfMonth.keys) {
+        if (mon != startMonth) week == weekDay[mon]!!
+        for (i in starDay..listOfMonth[mon]!!) {
+            var now = ""
+            now = if (mon > 9) "$i.$mon" else "$i.0$mon"
+            if ((now !in inp) && ((week != 6) && (week != 7))) {
+                result.add(now)
+                week++
+            } else if (week == 7) week = 1 else week++
+            if (i == endDay && mon == endMonth) return result
+        }
+        starDay = 1
+    }
+    return result
+}
+
+
+// tStart = "15:00"
+
+
+fun ggg (inputName: String, analis:String, tStart: String, tEnd: String): List<String> {
+    val result = mutableListOf<String>()
+    val newreg = """[А-Яа-я]* \d+\.\d+\.\d+\-\d+\:\d+\s(\"([А-Яа-я]+\s*)+")(, (\"([А-Яа-я]+\s*)+\"))*""".toRegex()
+    val startTime = tStart.split(":")[0].toInt() * 60 + tStart.split(":")[1].toInt()
+    val endTime = tEnd.split(":")[0].toInt() * 60 + tEnd.split(":")[1].toInt()
+    val reg = analis.toRegex()
+    for (line in File(inputName).readLines()) {
+        if (!line.matches(newreg)) throw IllegalArgumentException()
+        val newLine = line.split("-")
+        val name = newLine[0].split(" ")[0]
+        val time = newLine[1].split(""" \"""".toRegex())[0]
+        val ana = newLine[1].split(""" \"""".toRegex()).drop(0)
+        var analisTrue = false
+        for (i in 0 until ana.size) if (ana[i].contains(reg)) analisTrue = true
+        var needTime = time.split(":")[0].toInt() * 60 + time.split(":")[1].toInt()
+        if ((needTime in startTime..endTime) && (analisTrue)) result.add(name)
+    }
+    return result
+}
+
+fun main() {
+    val st ="Когда солнце накрыло раскаленными лучами только счто проснувщийся лес, влага, таящаясяя под покровом резной листвы стала испаряться и роща вновь наполнилась невыносимыми духотой  и жап и ж"
+    val u = "sun rises at 3.40, sun shining at 1.45, sin is our happy"
+    val reg = """sun\s\w*""".toRegex()
+    val  list = mutableListOf<String>()
+    val uu = reg.findAll((u)).groupByTo(list).toList().toString()
+    print(uu)
+}
+
+private fun <T> Sequence<T>.groupByTo(destination: MutableList<String>): MutableList<String> {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

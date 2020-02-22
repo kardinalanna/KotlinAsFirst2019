@@ -244,3 +244,72 @@ class Tests {
         assertEquals("двенадцать", russian(12))
     }
 }
+
+/*
+ @Test
+    fun flat() {
+        assertEquals(listOf("Tаврическая 54-67", "Московская 34-7"), flat("кухня 31", "input/sizeOfFlat4.txt"))
+         assertEquals(listOf("Tаврическая 54-67", "Московская 34-7"), flat("кухня 6, комната 9", "input/sizeOfFlat.txt"))
+        // assertEquals(listOf<String>(), flat("кухня 60, комната 9", "input/sizeOfFlat.txt"))
+      //  assertThrows(IllegalArgumentException::class.java) { flat("кухня 31", "input/sizeOfFla 3t.txt") }
+        assertThrows(IOException::class.java) { flat("кухня 31", "input/sizeOfFla 4 t.txt") }
+    }
+
+//"Таврическая 54-67", "Московская 34-7"
+
+    @Test
+    fun trass() {
+        assertEquals(5.975, trass("input/trass.txt", "B2:C3"), 1e-5)
+        // assertEquals(listOf("Таврическая 54-67", "Московская 34-7"), flat("кухня 6, комната 9", "input/sizeOfFlat.txt"))
+        // assertEquals(listOf<String>(), flat("кухня 60, комната 9", "input/sizeOfFlat.txt"))
+        //assertThrows(IllegalArgumentException::class.java) {trass("input/trass.txt", "A1:B2") }
+        //assertThrows(IOException::class.java) { trass("input/tras s.txt", "A1:B2") }
+    }
+
+
+    @Test
+    fun water() {
+        //  assertEquals(88, water("input/water.txt", "Май 2...7"))
+        //assertEquals(34, water("input/water.txt", "Май 9...Июль 4"))
+        assertThrows(IllegalArgumentException::class.java) { water("input/water1.txt", "Май 2...7") }
+        assertThrows(IOException::class.java) { water("input/tras s.txt", "Май 2...7") }
+    }
+
+
+    @Test
+    fun goods() {
+        //assertThrows(IllegalArgumentException::class.java) { goods("input/goods.txt", "000000 90") }
+        //assertThrows(IOException::class.java) { goods("input/tras s.txt", "000000 9") }
+        assertEquals(
+            listOf(
+                "сметана, достаточно, общая стоимость 60 р",
+                "хлеб, недостаточно, общая стоимость 5 р",
+                "тыква, недостаточно, общая стоимость 17 р"
+            ),
+            goods("input/goods.txt", "* 6")
+        )
+    }
+
+    @Test
+    fun ter() {
+        assertEquals(listOf(3, 4, 5), ter("input/ter.txt", "Y & C"))
+        assertEquals(listOf(1, 2, 4, 5), ter("input/ter.txt", "Y & !A"))
+        assertThrows(IllegalArgumentException::class.java) { ter("input/ter1.txt", "Y & C") }
+        assertThrows(IOException::class.java) { ter("input/tras s.txt", "Y & C") }
+
+    }
+
+    @Test
+    fun flyTime() {
+        assertEquals(
+            listOf<Pair<String, String>>("LO210" to "LV2210"),
+            flyTime("input/fly.txt", "Petersburg", "Frunkfurt")
+        )
+        assertEquals(
+            listOf<Pair<String, String>>("LD220" to "JA909", "FV1234" to "JA909", "LO210" to "JA909"),
+            flyTime("input/fly.txt", "Petersburg", "Tokio")
+        )
+        assertThrows(IllegalArgumentException::class.java) { flyTime("input/ter1.txt", "Y & C", "llkl") }
+        assertThrows(IOException::class.java) { flyTime("input/tras s.txt", "Lkfl", "London") }
+    }
+ */

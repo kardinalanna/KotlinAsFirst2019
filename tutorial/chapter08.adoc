@@ -29,7 +29,7 @@ fun distance(p1: Point, p2: Point) = ...
 
 [source,kotlin]
 ----
-class Point(val x: Double, val y: Double)
+class Point(val x: Double, val y: Double)                                    *class Point(val x: Double, val y: Double)*
 
 fun distance(p1: Point, p2: Point) = sqrt(sqr(p2.x - p1.x) + sqr(p2.y - p1.y))
 ----

@@ -1,9 +1,13 @@
 package lesson7.task1
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.io.IOException
+import java.lang.IllegalArgumentException
 
 class Tests {
 
@@ -110,7 +114,7 @@ Basic, Ruby, Swift.
                                           """ +  // Avoiding trailing whitespaces problem
                     """
                                      Hello World
-           Во входном файле с именем inputName содержится некоторый текст.
+           Во входном файле с именем inputName содержит ся некоторый текст.
         Вывести его в выходной файл с именем outputName, выровняв по центру."""
         )
         File("temp.txt").delete()
@@ -430,4 +434,28 @@ Basic, Ruby, Swift.
 
         File("temp.txt").delete()
     }
+
+
+    @Test
+    fun calendar() {
+        assertEquals(listOf("28.01", "29.01"), calendar("input/empty.txt", "28.01", "02.02"))
+        assertEquals(listOf("28.01", "29.01", "3.02"), calendar("input/empty.txt", "28.01", "05.02"))
+        //assertEquals(listOf("28.01", "29.01", "3.02"), calendar("input/empty.txt", "16.01", "08.02"))
+        assertThrows(IllegalArgumentException::class.java) { calendar("input/empty.txt", "28.001", "05.02") }
+    }
+
+
+
+    @Test
+    fun ggg() {
+       // assertEquals(listOf("Андреева", "Варикова"), ggg("input/empty.txt", "МРТ сердца", "15:00", "19:00"))
+        assertThrows(IllegalArgumentException::class.java) { ggg ("input/empty.txt", "МРТ сердца", "15:00", "19:00") }
+    }
+
+
+
+
+
+
+
 }
