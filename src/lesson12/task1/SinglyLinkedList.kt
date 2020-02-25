@@ -126,3 +126,5 @@ class SinglyLinkedList {
         }
     }
 }
+class Test {
+}
