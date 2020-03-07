@@ -136,23 +136,4 @@ class PhoneBook {
         }
         return hash
     }
-
-
-}
-
-fun main() {
-    val r = PhoneBook()
-    r.addHuman("натаща")
-    r.addHuman("васек")
-    r.addPhone("натаща", "+999")
-    r.addPhone("васек", "+888")
-    val t = PhoneBook()
-    r.addHuman("васек")
-    r.addHuman("натаща")
-    r.addPhone("натаща", "+999")
-    r.addPhone("васек", "+888")
-    print(t.hashCode())
-    print(r.hashCode())
-    print(r.equals(t))
-
 }
