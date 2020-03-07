@@ -2,6 +2,8 @@
 
 package lesson12.task1
 
+import javax.swing.text.Segment
+
 /**
  * Класс "хеш-таблица с открытой адресацией"
  *
@@ -25,24 +27,49 @@ class OpenHashSet<T>(val capacity: Int) {
     /**
      * Число элементов в хеш-таблице
      */
-    val size: Int get() = elements.count { it != null }
+    var size: Int = 0
 
     /**
      * Признак пустоты
      */
-    fun isEmpty(): Boolean = elements.all { it == null }
+    fun isEmpty(): Boolean = (size == 0)
 
     /**
      * Добавление элемента.
      * Вернуть true, если элемент был успешно добавлен,
      * или false, если такой элемент уже был в таблице, или превышена вместимость таблицы.
      */
+
+    private fun hash(element: T): Int {
+        var h = 0
+        val elem = element.toString()
+        for (i in elem) h = 31 * h + i.toInt()
+        return h % capacity
+    }
+
     fun add(element: T): Boolean {
-        for ((key, value) in elements.withIndex()) {
-            if (value == element || !elements.contains(null)) return false
-            if (value == null) {
-                elements[key] = element
-                return true
+        val hash = hash(element)
+        if (elements[hash] == null) {
+            size++
+            elements[hash] = element
+            return true
+        } else {
+
+            for (hahKey in hash until capacity) {
+                if (elements[hahKey] == element) return false
+                if (elements[hahKey] == null) {
+                    size++
+                    elements[hahKey] = element
+                    return true
+                }
+
+            }
+            for (beforHs in 0..hash) {
+                if (elements[beforHs] == null) {
+                    size++
+                    elements[beforHs] = element
+                    return true
+                }
             }
         }
         return false
@@ -51,20 +78,39 @@ class OpenHashSet<T>(val capacity: Int) {
     /**
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
-    operator fun contains(element: T): Boolean = element in elements
+    operator fun contains(element: T): Boolean {
+        val hash = hash(element)
+        var i = hash
+        while (i != elements.size) {
+            if (elements[i] == element) return true
+            i++
+        }
+        i = 0
+        while (i != hash) {
+            if (elements[i] == element) return true
+            i++
+        }
+        return false
+    }
 
     /**
      * Таблицы равны, если в них одинаковое количество элементов,
      * и любой элемент из второй таблицы входит также и в первую
      */
     override fun equals(other: Any?): Boolean {
-        require(other is OpenHashSet<*>)
-        val o = (elements.count { it != null })
-        val p = (other.elements.count { it != null })
-        if (elements.count { it != null } != other.elements.count { it != null }) return false
-        for ((key, value) in elements.withIndex()) if (!other.elements.contains(value)) return false
-        return true
+        if (other is OpenHashSet<*> && elements.size == other.size) {
+            for ((key, value) in elements.withIndex()) if (!other.elements.contains(value)) return true
+        }
+        return false
     }
 
-    override fun hashCode(): Int = javaClass.hashCode()
+    override fun hashCode(): Int {
+        var t = 0
+        for (key in 0 until this.size) {
+            key.toString().toCharArray().forEach { t += it.toInt() }
+            t += t * 31
+
+        }
+        return t
+    }
 }

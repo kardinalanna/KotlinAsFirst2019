@@ -20,9 +20,13 @@ import java.util.*
  * Класс должен иметь конструктор по умолчанию (без параметров).
  */
 class PhoneBook {
-    private val book = mutableMapOf<String, MutableSet<String>>()
-    private val correctName = """[А-ЯA-Z][а-яa-z]* [А-ЯA-Z][а-яa-z]*""".toRegex()
-    private val correctPhone = """[\d\+\-\*\#]*""".toRegex()
+    val book = mutableMapOf<String, MutableSet<String>>()
+
+    companion object {
+        val correctName = """[А-ЯA-Z][а-яa-z]* [А-ЯA-Z][а-яa-z]*""".toRegex()
+        val correctPhone = """[\d\+\-\*\#]*""".toRegex()
+        private val listOfPhone = mutableSetOf<String>()
+    }
 
     /**
      * Добавить человека.
@@ -48,10 +52,8 @@ class PhoneBook {
 
     fun removeHuman(name: String): Boolean {
         if (!name.matches(correctName)) throw java.lang.IllegalArgumentException()
-        return if (name !in book) false else {
-            book.remove(name)
-            true
-        }
+        book.remove(name) ?: return false
+        return true
     }
 
     /**
@@ -64,10 +66,16 @@ class PhoneBook {
 
     fun addPhone(name: String, phone: String): Boolean {
         if (!phone.matches(correctPhone) || !name.matches(correctName)) throw IllegalArgumentException()
-        if (name !in book.keys) return false
-        for ((key, value) in book) if (phone in value) return false
-        book[name]!!.add(phone)
-        return true
+        if (!(book[name]?.contains(phone) ?: return false) && !listOfPhone.contains(phone)) {
+            book[name]?.add(phone) ?: return false
+            return true
+        }
+        listOfPhone.add(phone)
+        return false
+    }
+
+    init {
+        listOfPhone.clear()
     }
 
     /**
@@ -79,9 +87,11 @@ class PhoneBook {
 
     fun removePhone(name: String, phone: String): Boolean {
         if (!phone.matches(correctPhone) || !name.matches(correctName)) throw IllegalArgumentException()
-        return if (name !in book.keys || phone !in book[name]!!) false else {
-            book[name]!!.remove(phone)
+        if (book[name]?.contains(phone) ?: return false) {
+            book[name]?.remove(phone) ?: return false
+            return true
         }
+        return false
     }
 
     /**
@@ -90,7 +100,7 @@ class PhoneBook {
      */
     fun phones(name: String): Set<String> {
         if (!name.matches(correctName)) throw IllegalArgumentException()
-        return if (name !in book.keys) setOf() else book[name]!!
+        return book[name] ?: setOf()
     }
 
     /**
@@ -109,13 +119,40 @@ class PhoneBook {
      * Порядок людей / порядок телефонов в книге не должен иметь значения.
      */
     override fun equals(other: Any?): Boolean {
-        require(other is PhoneBook)
-        for ((key, value) in book) {
-            if (other.book[key] != value) return false
-        }
+        if (other is PhoneBook)
+            for ((key, value) in book) {
+                if (other.book[key] != value) return false
+            }
         return true
     }
 
-    override fun hashCode(): Int = javaClass.hashCode()
+    override fun hashCode(): Int {
+        var hash = 0
+        var t = 0
+        for ((key, value) in book) {
+            key.toCharArray().forEach { t += it.toInt() }
+            hash += t * 31 + value.size * 31
+            t = 0
+        }
+        return hash
+    }
+
+
 }
 
+fun main() {
+    val r = PhoneBook()
+    r.addHuman("натаща")
+    r.addHuman("васек")
+    r.addPhone("натаща", "+999")
+    r.addPhone("васек", "+888")
+    val t = PhoneBook()
+    r.addHuman("васек")
+    r.addHuman("натаща")
+    r.addPhone("натаща", "+999")
+    r.addPhone("васек", "+888")
+    print(t.hashCode())
+    print(r.hashCode())
+    print(r.equals(t))
+
+}

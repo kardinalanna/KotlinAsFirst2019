@@ -66,7 +66,7 @@ class OpenHashSetTest {
     }
 
     @Test
-    fun testHashCode() {
+    fun testHash() {
         val set1 = OpenHashSet<Int>(8)
         set1.add(1)
         set1.add(3)
