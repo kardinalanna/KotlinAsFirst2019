@@ -76,5 +76,14 @@ class OpenHashSetTest {
         set2.add(3)
         set2.add(6)
         assertTrue(set1.hashCode() == set2.hashCode())
+     /*   val set3 = OpenHashSet<Int>(8)
+        *//*set1.add(23)
+        set1.add(31)
+        set1.add(67)*//*
+        val set4 = OpenHashSet<Int>(4)
+        *//* set2.add(23)
+        set2.add(31)
+        set2.add(67) *//*
+        assertTrue(set3.hashCode() == set4.hashCode())*/
     }
 }

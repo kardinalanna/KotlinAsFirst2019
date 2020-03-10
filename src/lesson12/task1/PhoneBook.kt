@@ -23,8 +23,8 @@ class PhoneBook {
     val book = mutableMapOf<String, MutableSet<String>>()
 
     companion object {
-        val correctName = """[А-ЯA-Z][а-яa-z]* [А-ЯA-Z][а-яa-z]*""".toRegex()
-        val correctPhone = """[\d\+\-\*\#]*""".toRegex()
+        private val correctName = """[А-ЯA-Z][а-яa-z]* [А-ЯA-Z][а-яa-z]*""".toRegex()
+        private val correctPhone = """[\d\+\-\*\#]*""".toRegex()
         private val listOfPhone = mutableSetOf<String>()
     }
 

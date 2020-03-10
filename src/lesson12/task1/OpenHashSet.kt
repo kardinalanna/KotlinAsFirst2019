@@ -98,18 +98,24 @@ class OpenHashSet<T>(val capacity: Int) {
      * и любой элемент из второй таблицы входит также и в первую
      */
     override fun equals(other: Any?): Boolean {
-        if (other is OpenHashSet<*> && elements.size == other.size) {
-            for ((key, value) in elements.withIndex()) if (!other.elements.contains(value)) return true
-        }
-        return false
+        if (other is OpenHashSet<*> && this.size == other.size) {
+            for ((key, value) in elements.withIndex()) if (!other.elements.contains(value)) return false
+            return true
+        } else return false
     }
+
+
+    /*  override fun hashCode(): Int {
+        var result = elements.contentHashCode()
+        result = 31 * result + size
+        return result
+    }*/
+
 
     override fun hashCode(): Int {
         var t = 0
-        for (key in 0 until this.size) {
-            key.toString().toCharArray().forEach { t += it.toInt() }
-            t += t * 31
-
+        for ((key, vall) in this.elements.withIndex()) {
+            vall?.toString()?.toCharArray()?.forEach { t += it.toInt() * 31 }
         }
         return t
     }
