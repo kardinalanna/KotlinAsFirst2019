@@ -42,35 +42,35 @@ class OpenHashSet<T>(val capacity: Int) {
 
     private fun hash(element: T): Int {
         var h = 0
-        val elem = element.toString()
-        for (i in elem) h = 31 * h + i.toInt()
-        return h % capacity
+        val elem = element.hashCode()
+        return elem % capacity
     }
 
+    private var flag = 0
+
     fun add(element: T): Boolean {
-        val hash = hash(element)
+        var hash = hash(element)
+        var ending = capacity
+        if (flag == 1) {
+            ending = hash
+            hash = 0
+        }
         if (elements[hash] == null) {
             size++
             elements[hash] = element
             return true
         } else {
-
-            for (hahKey in hash until capacity) {
+            for (hahKey in hash until ending) {
                 if (elements[hahKey] == element) return false
                 if (elements[hahKey] == null) {
                     size++
                     elements[hahKey] = element
                     return true
                 }
-
             }
-            for (beforHs in 0..hash) {
-                if (elements[beforHs] == null) {
-                    size++
-                    elements[beforHs] = element
-                    return true
-                }
-            }
+            if (flag == 1) return false
+            flag = 1
+            add(element)
         }
         return false
     }

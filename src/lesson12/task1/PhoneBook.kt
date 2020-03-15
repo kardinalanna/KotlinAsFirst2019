@@ -119,11 +119,7 @@ class PhoneBook {
      * Порядок людей / порядок телефонов в книге не должен иметь значения.
      */
     override fun equals(other: Any?): Boolean {
-        if (other is PhoneBook)
-            for ((key, value) in book) {
-                if (other.book[key] != value) return false
-            }
-        return true
+        return other is PhoneBook && other.book == this.book
     }
 
     override fun hashCode(): Int {
